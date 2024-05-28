@@ -3,7 +3,7 @@
   <advance width="380"/>
   <unicode hex="0045"/>
   <unicode hex="0065"/>
-  <guideline name="E Bar" x="0" y="334" angle="0" identifier="wb94MzpUaN"/>
+  <guideline x="0" y="334" angle="0" name="E Bar" identifier="wb94MzpUaN"/>
   <anchor x="207" y="746" name="top"/>
   <outline>
     <contour>
@@ -31,4 +31,10 @@
       <point x="80" y="370" type="line"/>
     </contour>
   </outline>
+  <lib>
+    <dict>
+      <key>com.typemytype.robofont.guideline.locked.wb94MzpUaN</key>
+      <true/>
+    </dict>
+  </lib>
 </glyph>
