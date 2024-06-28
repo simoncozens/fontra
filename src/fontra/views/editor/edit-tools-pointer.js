@@ -183,6 +183,7 @@ export class PointerTool extends BaseTool {
       this.sceneController.sceneModel.clickedResizeHandle = resizeHandle;
       await this.handleBoundsResize(initialSelection, eventStream, initialEvent);
       delete this.sceneController.sceneModel.clickedResizeHandle;
+      delete this.sceneController.sceneModel.resizeBounds;
     }
   }
 
@@ -400,7 +401,8 @@ export class PointerTool extends BaseTool {
   async handleBoundsResize(selection, eventStream, initialEvent) {
     const sceneController = this.sceneController;
     const clickedResizeHandle = sceneController.sceneModel.clickedResizeHandle;
-
+    const resizeBounds = { ...this.sceneController.sceneModel.resizeBounds };
+    //console.log("resizeBounds", resizeBounds);
     // The following may seem wrong, but it's correct, because we say
     // for example bottom-left and not left-bottom. Y-X order.
     const [resizeHandlePositionY, resizeHandlePositionX] =
@@ -459,6 +461,13 @@ export class PointerTool extends BaseTool {
           x: (currentPoint.x - initialPoint.x) * fixDragLeftValue,
           y: (currentPoint.y - initialPoint.y) * fixDragBottomValue,
         };
+        //console.log("delta", delta);
+        const xMax = resizeBounds.xMax + delta.x;
+        const yMax = resizeBounds.yMax + delta.y;
+
+        const resizeBBOX = { ...resizeBounds, xMax: xMax, yMax: yMax };
+        //console.log("resizeBBOX", resizeBBOX);
+        this.sceneController.sceneModel.resizeBounds = resizeBBOX;
 
         const deepEditChanges = [];
         for (const layer of layerInfo) {
@@ -539,8 +548,11 @@ export class PointerTool extends BaseTool {
 
     const handleMargin =
       handleMarginValue * this.editor.visualizationLayers.scaleFactor;
-
-    const resizeSelectionBounds = getResizeBounds(glyph, selection);
+    if (!this.sceneController.sceneModel.resizeBounds) {
+      this.sceneController.sceneModel.resizeBounds = getResizeBounds(glyph, selection);
+    }
+    //const resizeSelectionBounds = getResizeBounds(glyph, selection);
+    const resizeSelectionBounds = this.sceneController.sceneModel.resizeBounds;
     const point = this.sceneController.selectedGlyphPoint(event);
     const resizeHandles = getResizeHandles(resizeSelectionBounds, handleMargin);
     for (const [handleName, handle] of Object.entries(resizeHandles)) {
@@ -589,7 +601,14 @@ registerVisualizationLayerDefinition({
   colors: { handleColor: "#BBB", strokeColor: "#DDD" },
   colorsDarkMode: { handleColor: "#777", strokeColor: "#555" },
   draw: (context, positionedGlyph, parameters, model, controller) => {
-    const resizeBounds = getResizeBounds(positionedGlyph.glyph, model.selection);
+    if (!model.selection.size) {
+      return;
+    }
+
+    if (!model.resizeBounds)
+      model.resizeBounds = getResizeBounds(positionedGlyph.glyph, model.selection);
+
+    const resizeBounds = model.resizeBounds;
     if (!resizeBounds) {
       return;
     }
@@ -662,6 +681,7 @@ function getResizeHandles(resizeBounds, margin) {
 }
 
 function getResizeBounds(glyph, selection) {
+  //console.log("getResizeBounds");
   const selectionBounds = glyph.getSelectionBounds(selection);
   if (!selectionBounds) {
     return undefined;
