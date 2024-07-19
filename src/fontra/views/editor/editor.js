@@ -213,9 +213,12 @@ export class EditorController {
     });
 
     // TODO: Font Guidelines
-    // this.sceneController.addEventListener("doubleClickedFontGuidelines", async (event) => {
-    //   this.doubleClickedFontGuidelinesCallback(event);
-    // });
+    this.sceneController.addEventListener(
+      "doubleClickedFontGuidelines",
+      async (event) => {
+        this.doubleClickedFontGuidelinesCallback(event);
+      }
+    );
 
     this.sceneController.addEventListener("glyphEditCannotEditReadOnly", async () => {
       this.showDialogGlyphEditCannotEditReadOnly();
@@ -1104,6 +1107,10 @@ export class EditorController {
     });
   }
 
+  async doubleClickedFontGuidelinesCallback(event) {
+    console.log("doubleClickedFontGuidelinesCallback", event);
+  }
+
   initContextMenuItems() {
     this.basicContextMenuItems = [];
     for (const isRedo of [false, true]) {
@@ -1921,7 +1928,7 @@ export class EditorController {
       component: componentSelection,
       anchor: anchorSelection,
       guideline: guidelineSelection,
-      //fontGuideline: fontGuidelineSelection,
+      fontGuideline: fontGuidelineSelection,
     } = parseSelection(this.sceneController.selection);
     // TODO: Font Guidelines
     // if (fontGuidelineSelection) {
@@ -1956,6 +1963,12 @@ export class EditorController {
                 continue;
               }
               layerGlyph.guidelines.splice(guidelineIndex, 1);
+            }
+          }
+
+          if (fontGuidelineSelection) {
+            for (const guidelineIndex of reversed(fontGuidelineSelection)) {
+              console.log("TODO: delete font guideline: ", guidelineIndex);
             }
           }
         }
@@ -2472,13 +2485,13 @@ export class EditorController {
       component: componentIndices,
       anchor: anchorIndices,
       guideline: guidelineIndices,
-      //fontGuideline: fontGuidelineIndices,
+      fontGuideline: fontGuidelineIndices,
     } = parseSelection(this.sceneController.selection);
     pointIndices = pointIndices || [];
     componentIndices = componentIndices || [];
     anchorIndices = anchorIndices || [];
     guidelineIndices = guidelineIndices || [];
-    //fontGuidelineIndices = fontGuidelineIndices || [];
+    fontGuidelineIndices = fontGuidelineIndices || [];
 
     let selectObjects = false;
     let selectAnchors = false;
@@ -2503,8 +2516,8 @@ export class EditorController {
       (!allOnCurvePointsSelected ||
         componentIndices.length < instance.components.length) &&
       !anchorIndices.length &&
-      !guidelineIndices.length
-      //&& !fontGuidelineIndices.length
+      !guidelineIndices.length &&
+      !fontGuidelineIndices.length
     ) {
       if (hasObjects) {
         selectObjects = true;
@@ -2519,8 +2532,8 @@ export class EditorController {
       allOnCurvePointsSelected &&
       componentIndices.length == instance.components.length &&
       !anchorIndices.length &&
-      !guidelineIndices.length
-      //&& !fontGuidelineIndices.length
+      !guidelineIndices.length &&
+      !fontGuidelineIndices.length
     ) {
       if (hasAnchors) {
         selectObjects = true;
@@ -2533,8 +2546,8 @@ export class EditorController {
     if (
       (pointIndices.length || componentIndices.length) &&
       anchorIndices.length &&
-      !guidelineIndices.length
-      //&& !fontGuidelineIndices.length
+      !guidelineIndices.length &&
+      !fontGuidelineIndices.length
     ) {
       if (hasAnchors) {
         selectAnchors = true;
@@ -2545,8 +2558,8 @@ export class EditorController {
       !pointIndices.length &&
       !componentIndices.length &&
       anchorIndices.length &&
-      !guidelineIndices.length
-      //&& !fontGuidelineIndices.length
+      !guidelineIndices.length &&
+      !fontGuidelineIndices.length
     ) {
       if (hasGuidelines) {
         selectGuidelines = true;
@@ -2577,7 +2590,21 @@ export class EditorController {
           newSelection.add(`guideline/${guidelineIndex}`);
         }
       }
+
       // TODO: Font Guidelines selection
+      const location = {
+        ...this.sceneSettings.fontLocationSourceMapped,
+        ...this.sceneSettings.glyphLocation,
+      };
+
+      const fontSourceInstance =
+        this.fontController.fontSourcesInstancer.instantiate(location);
+      for (const guidelineIndex of range(fontSourceInstance.guidelines.length)) {
+        const guideline = fontSourceInstance.guidelines[guidelineIndex];
+        if (!guideline.locked) {
+          newSelection.add(`fontGuideline/${guidelineIndex}`);
+        }
+      }
     }
     this.sceneController.selection = newSelection;
   }
