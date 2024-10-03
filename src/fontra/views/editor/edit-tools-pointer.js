@@ -113,6 +113,23 @@ export class PointerTool extends BaseTool {
     }
   }
 
+  selectContour(sceneController, contourIndex, selectModeFunction) {
+    const instance = this.sceneModel.getSelectedPositionedGlyph().glyph.instance;
+    const startPoint = instance.path.getAbsolutePointIndex(contourIndex, 0);
+    const endPoint = instance.path.contourInfo[contourIndex].endPoint;
+    const newSelection = new Set();
+    for (const i of range(startPoint, endPoint + 1)) {
+      const pointType = instance.path.pointTypes[i] & VarPackedPath.POINT_TYPE_MASK;
+      if (pointType === VarPackedPath.ON_CURVE) {
+        newSelection.add(`point/${i}`);
+      }
+    }
+    const sselection = this._selectionBeforeSingleClick || sceneController.selection;
+    this._selectionBeforeSingleClick = undefined;
+    const modeFunc = selectModeFunction(event);
+    sceneController.selection = modeFunc(sselection, newSelection);
+  }
+
   async handleDrag(eventStream, initialEvent) {
     const sceneController = this.sceneController;
     const initialSelection = sceneController.selection;
@@ -159,57 +176,65 @@ export class PointerTool extends BaseTool {
       eventStream.done();
       return;
     }
+    if (initialEvent.metaKey) {
+      const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
+      const positionedGlyph = this.sceneModel.getSelectedPositionedGlyph();
+      point.x -= positionedGlyph.x;
+      point.y -= positionedGlyph.y;
+      const pathHitTester = glyphController.flattenedPathHitTester;
+      const nearestHit = pathHitTester.findNearest(point);
+      const contourIndex = nearestHit.contourIndex;
+      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+    } else {
+      let initiateDrag = false;
+      let initiateRectSelect = false;
 
-    let initiateDrag = false;
-    let initiateRectSelect = false;
-
-    const modeFunc = getSelectModeFunction(event);
-    const newSelection = modeFunc(sceneController.selection, selection);
-    const cleanSel = selection;
-    if (
-      !selection.size ||
-      event.shiftKey ||
-      event.altKey ||
-      !isSuperset(sceneController.selection, cleanSel)
-    ) {
-      this._selectionBeforeSingleClick = sceneController.selection;
-      sceneController.selection = newSelection;
-    }
-
-    if (isSuperset(sceneController.selection, cleanSel)) {
-      initiateDrag = true;
-    }
-    if (!selection.size) {
-      initiateRectSelect = true;
-    }
-
-    if (initiateRectSelect || initiateDrag) {
-      if (!(await shouldInitiateDrag(eventStream, initialEvent))) {
-        initiateRectSelect = false;
-        initiateDrag = false;
-        if (!selection.size) {
-          const selectedGlyph = this.sceneModel.glyphAtPoint(point);
-          if (
-            selectedGlyph &&
-            !equalGlyphSelection(selectedGlyph, this.sceneSettings.selectedGlyph)
-          ) {
-            this.sceneSettings.selectedGlyph = selectedGlyph;
-            eventStream.done();
-            return;
+      const modeFunc = getSelectModeFunction(event);
+      const newSelection = modeFunc(sceneController.selection, selection);
+      const cleanSel = selection;
+      if (
+        !selection.size ||
+        event.shiftKey ||
+        event.altKey ||
+        !isSuperset(sceneController.selection, cleanSel)
+      ) {
+        this._selectionBeforeSingleClick = sceneController.selection;
+        sceneController.selection = newSelection;
+      }
+      if (isSuperset(sceneController.selection, cleanSel)) {
+        initiateDrag = true;
+      }
+      if (!selection.size) {
+        initiateRectSelect = true;
+      }
+      if (initiateRectSelect || initiateDrag) {
+        if (!(await shouldInitiateDrag(eventStream, initialEvent))) {
+          initiateRectSelect = false;
+          initiateDrag = false;
+          if (!selection.size) {
+            const selectedGlyph = this.sceneModel.glyphAtPoint(point);
+            if (
+              selectedGlyph &&
+              !equalGlyphSelection(selectedGlyph, this.sceneSettings.selectedGlyph)
+            ) {
+              this.sceneSettings.selectedGlyph = selectedGlyph;
+              eventStream.done();
+              return;
+            }
           }
         }
       }
-    }
 
-    sceneController.hoveredGlyph = undefined;
-    if (initiateRectSelect) {
-      return await this.handleRectSelect(eventStream, initialEvent, initialSelection);
-    } else if (initiateDrag) {
-      this.sceneController.sceneModel.initialClickedPointIndex =
-        initialClickedPointIndex;
-      const result = await this.handleDragSelection(eventStream, initialEvent);
-      delete this.sceneController.sceneModel.initialClickedPointIndex;
-      return result;
+      sceneController.hoveredGlyph = undefined;
+      if (initiateRectSelect) {
+        return await this.handleRectSelect(eventStream, initialEvent, initialSelection);
+      } else if (initiateDrag) {
+        this.sceneController.sceneModel.initialClickedPointIndex =
+          initialClickedPointIndex;
+        const result = await this.handleDragSelection(eventStream, initialEvent);
+        delete this.sceneController.sceneModel.initialClickedPointIndex;
+        return result;
+      }
     }
   }
 
@@ -259,19 +284,7 @@ export class PointerTool extends BaseTool {
         await this.handlePointsDoubleClick(pointIndices);
       } else if (sceneController.hoverPathHit) {
         const contourIndex = sceneController.hoverPathHit.contourIndex;
-        const startPoint = instance.path.getAbsolutePointIndex(contourIndex, 0);
-        const endPoint = instance.path.contourInfo[contourIndex].endPoint;
-        const newSelection = new Set();
-        for (const i of range(startPoint, endPoint + 1)) {
-          const pointType = instance.path.pointTypes[i] & VarPackedPath.POINT_TYPE_MASK;
-          if (pointType === VarPackedPath.ON_CURVE) {
-            newSelection.add(`point/${i}`);
-          }
-        }
-        const selection = this._selectionBeforeSingleClick || sceneController.selection;
-        this._selectionBeforeSingleClick = undefined;
-        const modeFunc = getSelectModeFunction(event);
-        sceneController.selection = modeFunc(selection, newSelection);
+        this.selectContour(sceneController, contourIndex, getSelectModeFunction);
       }
     }
   }
@@ -693,6 +706,16 @@ function getSelectModeFunction(event) {
     : event[commandKeyProperty]
     ? union
     : replace;
+}
+
+function getMagicSelectModeFunction(event) {
+  return event.shiftKey
+    ? event[commandKeyProperty]
+      ? union
+      : symmetricDifference
+    : event[commandKeyProperty]
+    ? replace
+    : union;
 }
 
 registerVisualizationLayerDefinition({
