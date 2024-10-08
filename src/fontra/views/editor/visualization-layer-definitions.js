@@ -1546,6 +1546,29 @@ registerVisualizationLayerDefinition({
 });
 
 registerVisualizationLayerDefinition({
+  identifier: "fontra.magic.select",
+  name: "Magic select",
+  selectionMode: "editing",
+  zIndex: 500,
+  screenParameters: {
+    strokeWidth: 1,
+    lineDash: [10, 10],
+  },
+  draw: (context, positionedGlyph, parameters, model, controller) => {
+    if (model.magicSelection === undefined) {
+      return;
+    }
+    const selRect = model.magicSelection;
+    const x = selRect[0];
+    const y = selRect[1];
+    const w = selRect[2];
+    const h = selRect[3];
+    context.lineWidth = parameters.strokeWidth;
+    strokeLineDashed(context, x, y, w, h);
+  },
+});
+
+registerVisualizationLayerDefinition({
   identifier: "fontra.rect.select",
   name: "Rect select",
   selectionMode: "editing",
