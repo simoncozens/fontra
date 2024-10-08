@@ -1559,12 +1559,12 @@ registerVisualizationLayerDefinition({
       return;
     }
     const selRect = model.magicSelection;
-    const x = selRect[0];
-    const y = selRect[1];
-    const w = selRect[2];
-    const h = selRect[3];
+    const p1x = selRect[0];
+    const p1y = selRect[1];
+    const p2x = selRect[2];
+    const p2y = selRect[3];
     context.lineWidth = parameters.strokeWidth;
-    strokeLineDashed(context, x, y, w, h);
+    strokeLineDashed(context, p1x, p1y, p2x, p2y);
   },
 });
 
