@@ -124,10 +124,10 @@ export class PointerTool extends BaseTool {
         newSelection.add(`point/${i}`);
       }
     }
-    const sselection = this._selectionBeforeSingleClick || sceneController.selection;
+    const selection = this._selectionBeforeSingleClick || sceneController.selection;
     this._selectionBeforeSingleClick = undefined;
     const modeFunc = selectModeFunction(event);
-    sceneController.selection = modeFunc(sselection, newSelection);
+    sceneController.selection = modeFunc(selection, newSelection);
   }
 
   getNearestHit(sceneController, event, glyphController) {
