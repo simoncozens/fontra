@@ -130,6 +130,16 @@ export class PointerTool extends BaseTool {
     sceneController.selection = modeFunc(sselection, newSelection);
   }
 
+  getNearestHit(sceneController, event, glyphController) {
+    const positionedGlyph = this.sceneModel.getSelectedPositionedGlyph();
+    const point = sceneController.localPoint(event);
+    point.x -= positionedGlyph.x;
+    point.y -= positionedGlyph.y;
+    const pathHitTester = glyphController.flattenedPathHitTester;
+    const nearestHit = pathHitTester.findNearest(point);
+    return nearestHit;
+  }
+
   async handleDrag(eventStream, initialEvent) {
     const sceneController = this.sceneController;
     const initialSelection = sceneController.selection;
@@ -176,54 +186,57 @@ export class PointerTool extends BaseTool {
       eventStream.done();
       return;
     }
-    if (initialEvent.metaKey) {
-      const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
-      const positionedGlyph = this.sceneModel.getSelectedPositionedGlyph();
-      point.x -= positionedGlyph.x;
-      point.y -= positionedGlyph.y;
-      const pathHitTester = glyphController.flattenedPathHitTester;
-      const nearestHit = pathHitTester.findNearest(point);
-      const contourIndex = nearestHit.contourIndex;
-      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
-    } else {
-      let initiateDrag = false;
-      let initiateRectSelect = false;
+    let initiateDrag = false;
+    let initiateRectSelect = false;
 
-      const modeFunc = getSelectModeFunction(event);
-      const newSelection = modeFunc(sceneController.selection, selection);
-      const cleanSel = selection;
-      if (
-        !selection.size ||
-        event.shiftKey ||
-        event.altKey ||
-        !isSuperset(sceneController.selection, cleanSel)
-      ) {
-        this._selectionBeforeSingleClick = sceneController.selection;
-        sceneController.selection = newSelection;
-      }
-      if (isSuperset(sceneController.selection, cleanSel)) {
-        initiateDrag = true;
-      }
-      if (!selection.size) {
-        initiateRectSelect = true;
-      }
-      if (initiateRectSelect || initiateDrag) {
-        if (!(await shouldInitiateDrag(eventStream, initialEvent))) {
-          initiateRectSelect = false;
-          initiateDrag = false;
-          if (!selection.size) {
-            const selectedGlyph = this.sceneModel.glyphAtPoint(point);
-            if (
-              selectedGlyph &&
-              !equalGlyphSelection(selectedGlyph, this.sceneSettings.selectedGlyph)
-            ) {
-              this.sceneSettings.selectedGlyph = selectedGlyph;
-              eventStream.done();
-              return;
-            }
+    const modeFunc = getSelectModeFunction(event);
+    const newSelection = modeFunc(sceneController.selection, selection);
+    const cleanSel = selection;
+
+    if (
+      !selection.size ||
+      event.shiftKey ||
+      event.altKey ||
+      !isSuperset(sceneController.selection, cleanSel)
+    ) {
+      this._selectionBeforeSingleClick = sceneController.selection;
+      sceneController.selection = newSelection;
+    }
+    if (isSuperset(sceneController.selection, cleanSel)) {
+      initiateDrag = true;
+    }
+    if (!selection.size) {
+      initiateRectSelect = true;
+    }
+
+    if (initiateRectSelect || initiateDrag) {
+      if (!(await shouldInitiateDrag(eventStream, initialEvent))) {
+        initiateRectSelect = false;
+        initiateDrag = false;
+        if (!selection.size) {
+          const selectedGlyph = this.sceneModel.glyphAtPoint(point);
+          if (
+            selectedGlyph &&
+            !equalGlyphSelection(selectedGlyph, this.sceneSettings.selectedGlyph)
+          ) {
+            this.sceneSettings.selectedGlyph = selectedGlyph;
+            eventStream.done();
+            return;
           }
         }
       }
+    }
+
+    if (initialEvent.metaKey) {
+      const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
+      const nearestHit = this.getNearestHit(sceneController, initialEvent, glyphController);
+      const contourIndex = nearestHit.contourIndex;
+      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+
+      if (initiateRectSelect){
+        return await this.handleMagicSelect(eventStream, sceneController);
+      }
+    } else {
 
       sceneController.hoveredGlyph = undefined;
       if (initiateRectSelect) {
@@ -330,6 +343,15 @@ export class PointerTool extends BaseTool {
     }
     sceneController.selectionRect = undefined;
     this._selectionBeforeSingleClick = undefined;
+  }
+
+  async handleMagicSelect(eventStream, sceneController) {
+    const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
+    for await (const event of eventStream) {      
+      const nearestHit = this.getNearestHit(sceneController, event, glyphController);
+      const contourIndex = nearestHit.contourIndex;
+      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+    }
   }
 
   async handleDragSelection(eventStream, initialEvent) {
