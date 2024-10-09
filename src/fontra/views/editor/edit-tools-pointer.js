@@ -140,9 +140,9 @@ export class PointerTool extends BaseTool {
     const nearestHit = pathHitTester.findNearest(point);
     if (nearestHit){
       sceneController.magicSelectionHit = [
-        point.x, 
-        point.y, 
-        nearestHit.x, 
+        point.x,
+        point.y,
+        nearestHit.x,
         nearestHit.y
       ];
       const contourIndex = nearestHit.contourIndex;
@@ -357,7 +357,7 @@ export class PointerTool extends BaseTool {
   async handleMagicSelect(eventStream, sceneController) {
     const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
     for await (const event of eventStream) {
-      if (event.metaKey) {   
+      if (event.metaKey) {
         this.getNearestHit(sceneController, event, glyphController);
       } else {
         sceneController.magicSelectionHit = undefined;
