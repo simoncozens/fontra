@@ -188,13 +188,13 @@ export class PointerTool extends BaseTool {
       eventStream.done();
       return;
     }
+
     let initiateDrag = false;
     let initiateRectSelect = false;
 
     const modeFunc = getSelectModeFunction(event);
     const newSelection = modeFunc(sceneController.selection, selection);
     const cleanSel = selection;
-
     if (
       !selection.size ||
       event.shiftKey ||
@@ -204,6 +204,7 @@ export class PointerTool extends BaseTool {
       this._selectionBeforeSingleClick = sceneController.selection;
       sceneController.selection = newSelection;
     }
+    
     if (isSuperset(sceneController.selection, cleanSel)) {
       initiateDrag = true;
     }
