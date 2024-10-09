@@ -142,6 +142,8 @@ export class PointerTool extends BaseTool {
       sceneController.magicSelectionHit = [point.x, point.y, nearestHit.x, nearestHit.y];
       const contourIndex = nearestHit.contourIndex;
       this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+    } else {
+      sceneController.magicSelectionHit = undefined;
     }
   }
 
