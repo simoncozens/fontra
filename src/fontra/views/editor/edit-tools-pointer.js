@@ -136,10 +136,13 @@ export class PointerTool extends BaseTool {
     const point = sceneController.localPoint(event);
     point.x -= positionedGlyph.x;
     point.y -= positionedGlyph.y;
-    const pathHitTester = glyphController.flattenedPathHitTester;
+    const pathHitTester = glyphController.pathHitTester;
     const nearestHit = pathHitTester.findNearest(point);
-    sceneController.magicSelectionHit = [point.x, point.y, nearestHit.x, nearestHit.y];
-    return nearestHit;
+    if (nearestHit){
+      sceneController.magicSelectionHit = [point.x, point.y, nearestHit.x, nearestHit.y];
+      const contourIndex = nearestHit.contourIndex;
+      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+    }
   }
 
   async handleDrag(eventStream, initialEvent) {
@@ -204,7 +207,7 @@ export class PointerTool extends BaseTool {
       this._selectionBeforeSingleClick = sceneController.selection;
       sceneController.selection = newSelection;
     }
-    
+
     if (isSuperset(sceneController.selection, cleanSel)) {
       initiateDrag = true;
     }
@@ -232,15 +235,11 @@ export class PointerTool extends BaseTool {
 
     if (initialEvent.metaKey) {
       const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
-      const nearestHit = this.getNearestHit(sceneController, initialEvent, glyphController);
-      const contourIndex = nearestHit.contourIndex;
-      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
-
+      this.getNearestHit(sceneController, initialEvent, glyphController);
       if (initiateRectSelect){
         return await this.handleMagicSelect(eventStream, sceneController);
       }
     } else {
-
       sceneController.hoveredGlyph = undefined;
       if (initiateRectSelect) {
         return await this.handleRectSelect(eventStream, initialEvent, initialSelection);
@@ -352,9 +351,7 @@ export class PointerTool extends BaseTool {
     const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
     for await (const event of eventStream) {   
       if (event.metaKey) {   
-        const nearestHit = this.getNearestHit(sceneController, event, glyphController);
-        const contourIndex = nearestHit.contourIndex;
-        this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+        this.getNearestHit(sceneController, event, glyphController);
       } else {
         sceneController.magicSelectionHit = undefined;
       }
