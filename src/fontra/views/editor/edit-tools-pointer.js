@@ -58,7 +58,7 @@ export class PointerTool extends BaseTool {
     sceneController.hoverSelection = selection;
     sceneController.hoveredGlyph = undefined;
     sceneController.hoverPathHit = pathHit;
-    sceneController.sceneModel.magicSelection = [];
+    sceneController.magicSelection = [];
 
     if (!sceneController.hoverSelection.size && !sceneController.hoverPathHit) {
       sceneController.hoveredGlyph = this.sceneModel.glyphAtPoint(point);
@@ -126,7 +126,6 @@ export class PointerTool extends BaseTool {
       }
     }
     const selection = this._selectionBeforeSingleClick || sceneController.selection;
-    sceneController.selection = undefined;
     this._selectionBeforeSingleClick = undefined;
     const modeFunc = selectModeFunction(event);
     sceneController.selection = modeFunc(selection, newSelection);
@@ -139,7 +138,7 @@ export class PointerTool extends BaseTool {
     point.y -= positionedGlyph.y;
     const pathHitTester = glyphController.flattenedPathHitTester;
     const nearestHit = pathHitTester.findNearest(point);
-    sceneController.sceneModel.magicSelection = [point.x, point.y, nearestHit.x, nearestHit.y];
+    sceneController.magicSelection = [point.x, point.y, nearestHit.x, nearestHit.y];
     return nearestHit;
   }
 
