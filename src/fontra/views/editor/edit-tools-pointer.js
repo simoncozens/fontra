@@ -138,12 +138,12 @@ export class PointerTool extends BaseTool {
     point.y -= positionedGlyph.y;
     const pathHitTester = glyphController.pathHitTester;
     const nearestHit = pathHitTester.findNearest(point);
-    if (nearestHit){
+    if (nearestHit) {
       sceneController.magicSelectionHit = [
         point.x,
         point.y,
         nearestHit.x,
-        nearestHit.y
+        nearestHit.y,
       ];
       const contourIndex = nearestHit.contourIndex;
       this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
