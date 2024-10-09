@@ -349,10 +349,14 @@ export class PointerTool extends BaseTool {
 
   async handleMagicSelect(eventStream, sceneController) {
     const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
-    for await (const event of eventStream) {      
-      const nearestHit = this.getNearestHit(sceneController, event, glyphController);
-      const contourIndex = nearestHit.contourIndex;
-      this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+    for await (const event of eventStream) {   
+      if (event.metaKey) {   
+        const nearestHit = this.getNearestHit(sceneController, event, glyphController);
+        const contourIndex = nearestHit.contourIndex;
+        this.selectContour(sceneController, contourIndex, getMagicSelectModeFunction);
+      } else {
+        sceneController.magicSelectionHit = undefined;
+      }
     }
   }
 
