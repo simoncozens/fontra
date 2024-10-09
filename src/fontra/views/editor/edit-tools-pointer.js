@@ -58,7 +58,7 @@ export class PointerTool extends BaseTool {
     sceneController.hoverSelection = selection;
     sceneController.hoveredGlyph = undefined;
     sceneController.hoverPathHit = pathHit;
-    sceneController.magicSelectionHit = [];
+    sceneController.magicSelectionHit = undefined;
 
     if (!sceneController.hoverSelection.size && !sceneController.hoverPathHit) {
       sceneController.hoveredGlyph = this.sceneModel.glyphAtPoint(point);
