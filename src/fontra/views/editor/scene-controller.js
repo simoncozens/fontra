@@ -831,12 +831,12 @@ export class SceneController {
     this.canvasController.requestUpdate();
   }
 
-  get magicSelection() {
-    return this.sceneModel.magicSelection;
+  get magicSelectionHit() {
+    return this.sceneModel.magicSelectionHit;
   }
 
-  set magicSelection(magicSel) {
-    this.sceneModel.magicSelection = magicSel;
+  set magicSelectionHit(magicSelHit) {
+    this.sceneModel.magicSelectionHit = magicSelHit;
     this.canvasController.requestUpdate();
   }
 

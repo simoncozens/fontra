@@ -1555,14 +1555,14 @@ registerVisualizationLayerDefinition({
     lineDash: [10, 10],
   },
   draw: (context, positionedGlyph, parameters, model, controller) => {
-    if (model.magicSelection === undefined) {
+    if (model.magicSelectionHit === undefined) {
       return;
     }
-    const selRect = model.magicSelection;
-    const p1x = selRect[0];
-    const p1y = selRect[1];
-    const p2x = selRect[2];
-    const p2y = selRect[3];
+    const magicSelHit = model.magicSelectionHit;
+    const p1x = magicSelHit[0];
+    const p1y = magicSelHit[1];
+    const p2x = magicSelHit[2];
+    const p2y = magicSelHit[3];
     context.lineWidth = parameters.strokeWidth;
     strokeLineDashed(context, p1x, p1y, p2x, p2y);
   },

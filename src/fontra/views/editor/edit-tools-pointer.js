@@ -58,7 +58,7 @@ export class PointerTool extends BaseTool {
     sceneController.hoverSelection = selection;
     sceneController.hoveredGlyph = undefined;
     sceneController.hoverPathHit = pathHit;
-    sceneController.magicSelection = [];
+    sceneController.magicSelectionHit = [];
 
     if (!sceneController.hoverSelection.size && !sceneController.hoverPathHit) {
       sceneController.hoveredGlyph = this.sceneModel.glyphAtPoint(point);
@@ -138,7 +138,7 @@ export class PointerTool extends BaseTool {
     point.y -= positionedGlyph.y;
     const pathHitTester = glyphController.flattenedPathHitTester;
     const nearestHit = pathHitTester.findNearest(point);
-    sceneController.magicSelection = [point.x, point.y, nearestHit.x, nearestHit.y];
+    sceneController.magicSelectionHit = [point.x, point.y, nearestHit.x, nearestHit.y];
     return nearestHit;
   }
 
