@@ -240,7 +240,7 @@ export class PointerTool extends BaseTool {
       }
     }
 
-    if (initialEvent.metaKey) {
+    if (initialEvent.metaKey && initiateRectSelect) {
       const glyphController = await this.sceneModel.getSelectedStaticGlyphController();
       this.getNearestHit(sceneController, initialEvent, glyphController);
       if (initiateRectSelect) {
