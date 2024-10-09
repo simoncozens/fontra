@@ -358,6 +358,7 @@ export class PointerTool extends BaseTool {
         sceneController.magicSelectionHit = undefined;
       }
     }
+    sceneController.magicSelectionHit = undefined;
   }
 
   async handleDragSelection(eventStream, initialEvent) {
