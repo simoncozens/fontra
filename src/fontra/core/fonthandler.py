@@ -290,6 +290,7 @@ class FontHandler:
         if not hasattr(self.backend, "deleteBackgroundImage"):
             return None
         await self.backend.deleteBackgroundImage(imageIdentifier)
+        return
 
     def _getClientData(self, connection, key, default=None):
         return self.clientData[connection.clientUUID].get(key, default)
