@@ -213,25 +213,8 @@ export class FontController {
 
   _cacheBackgroundImageFromDataURLPromise(imageIdentifier, imageDataURLPromise) {
     const imagePromise = new Promise((resolve, reject) => {
-      // First show placeholder (if loading takes too long or if image is missing):
-      const [width, height] = [1000, 1000];
-
-      const canvasImage = document.createElement("canvas");
-      canvasImage.width = width;
-      canvasImage.height = height;
-
-      const context = canvasImage.getContext("2d");
-      context.fillStyle = "rgba(255, 0, 0, 0.2)";
-      context.fillRect(0, 0, width, height);
-
-      // I don't know why this doesn't work, but it doesn't:
-      // context.font = "48px fontra-ui-regular, sans-serif";
-      // context.fillStyle = "#ff0000";
-      // context.textAlign = "center";
-      // context.fillText("Missing Image Data", width / 2, height / 2);
-
-      const image = new Image(width, height);
-      image.src = canvasImage.toDataURL();
+      const image = new Image();
+      image.src = "/images/fontra-icon.svg";
 
       image.onload = (event) => {
         cacheEntry.image = image;
