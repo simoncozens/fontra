@@ -858,20 +858,24 @@ export class FontController {
       undoRecord = reverseUndoRecord(undoRecord);
     }
 
-    // the following code uses the cached images to put it back to the backend
     if (
-      !isRedo &&
       undoRecord?.rollbackChange?.a &&
       undoRecord.rollbackChange.a[0] === "backgroundImage"
     ) {
-      const backgroundImage = undoRecord.rollbackChange["a"][1];
-      // get cached image via getBackgroundImage
-      const image = await this.getBackgroundImage(backgroundImage.identifier);
-      // if image saved in the cache, put it back to the backend
-      if (image) {
-        await this.putBackgroundImageData(backgroundImage.identifier, image.src);
+      if (!isRedo) {
+        // the following code uses the cached image to put it back to the backend
+        const backgroundImage = undoRecord.rollbackChange["a"][1];
+        const image = await this.getBackgroundImage(backgroundImage.identifier);
+        if (image) {
+          await this.putBackgroundImageData(backgroundImage.identifier, image.src);
+        }
+      } else {
+        const backgroundImage = undoRecord.change["a"][1];
+        // if we do redo, we need to delete the image from the backend
+        await this.deleteBackgroundImageData(backgroundImage.identifier);
       }
     }
+
     // Hmmm, would be nice to have this abstracted more
     await this.applyChange(undoRecord.rollbackChange);
     const error = await this.editFinal(
