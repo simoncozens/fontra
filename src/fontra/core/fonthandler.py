@@ -289,8 +289,7 @@ class FontHandler:
     ) -> dict | None:
         if not hasattr(self.backend, "deleteBackgroundImage"):
             return None
-        await self.backend.deleteBackgroundImage(imageIdentifier)
-        return
+        return await self.backend.deleteBackgroundImage(imageIdentifier)
 
     def _getClientData(self, connection, key, default=None):
         return self.clientData[connection.clientUUID].get(key, default)
