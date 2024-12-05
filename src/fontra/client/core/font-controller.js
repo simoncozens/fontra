@@ -264,6 +264,10 @@ export class FontController {
     });
   }
 
+  async deleteBackgroundImageData(imageIdentifier) {
+    await this.font.deleteBackgroundImage(imageIdentifier);
+  }
+
   getCachedGlyphNames() {
     return this._glyphsPromiseCache.keys();
   }
@@ -852,6 +856,21 @@ export class FontController {
     }
     if (isRedo) {
       undoRecord = reverseUndoRecord(undoRecord);
+    }
+
+    // the following code uses the cached images to put it back to the backend
+    if (
+      !isRedo &&
+      undoRecord?.rollbackChange?.a &&
+      undoRecord.rollbackChange.a[0] === "backgroundImage"
+    ) {
+      const backgroundImage = undoRecord.rollbackChange["a"][1];
+      // get cached image via getBackgroundImage
+      const image = await this.getBackgroundImage(backgroundImage.identifier);
+      // if image saved in the cache, put it back to the backend
+      if (image) {
+        await this.putBackgroundImageData(backgroundImage.identifier, image.src);
+      }
     }
     // Hmmm, would be nice to have this abstracted more
     await this.applyChange(undoRecord.rollbackChange);
