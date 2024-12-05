@@ -427,7 +427,7 @@ registerVisualizationLayerDefinition({
       return;
     }
 
-    const image = model.fontController.getBackgroundImageColorizedCached(
+    let image = model.fontController.getBackgroundImageColorizedCached(
       backgroundImage.identifier,
       backgroundImage.color
         ? rgbaToCSS([
@@ -440,7 +440,26 @@ registerVisualizationLayerDefinition({
     );
 
     if (!image) {
-      return;
+      // If backgroundImage but no image -> image data is probably lost.
+      // Display placeholder:
+      const [width, height] = [1000, 1000];
+      const fontSize = 48;
+      const color = "rgba(255, 0, 0, 0.2)";
+
+      const canvasImage = document.createElement("canvas");
+      canvasImage.width = width;
+      canvasImage.height = height;
+
+      const context = canvasImage.getContext("2d");
+      context.fillStyle = color;
+      context.fillRect(0, 0, width, height);
+
+      context.font = `${fontSize}px fontra-ui-regular, sans-serif`;
+      context.textAlign = "center";
+      context.fillText("Missing Image Data", width / 2, height / 2);
+
+      image = new Image(width, height);
+      image.src = canvasImage.toDataURL();
     }
 
     const affine = decomposedToTransform(backgroundImage.transformation)
