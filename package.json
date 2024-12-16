@@ -1,7 +1,8 @@
 {
   "scripts": {
     "test": "mocha test-js --reporter spec",
-    "bundle-rollup": "rollup --bundleConfigAsCjs -c"
+    "bundle-rollup": "rollup --bundleConfigAsCjs -c",
+    "build": "webpack --config webpack.config.cjs"
   },
   "type": "module",
   "devDependencies": {
@@ -9,14 +10,21 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "chai": "^5.1.2",
     "chai-almost": "^1.0.1",
+    "copy-webpack-plugin": "^12.0.2",
     "mocha": "^11.0.1",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-sort-json": "^4.0.0",
-    "rollup": "^4.29.1"
+    "rollup": "^4.29.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
     "bezier-js": "^6.1.4",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "fflate": "^0.8.2",
+    "fontrabak": "file:/Users/simon/hacks/typography/fontrabak/pkg",
     "lib-font": "^2.4.3"
   }
 }
