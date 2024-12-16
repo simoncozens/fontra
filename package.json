@@ -16,7 +16,8 @@
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   },
   "workspaces": [
     "src-js/fontra-core",
@@ -37,6 +38,12 @@
     "@codemirror/legacy-modes": "^6.5.2",
     "@lezer/highlight": "^1.2.3",
     "babel-loader": "^10.0.0",
-    "codemirror": "^6.0.2"
+    "codemirror": "^6.0.2",
+    "bezier-js": "^6.1.4",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "fflate": "^0.8.2",
+    "fontrabak": "file:/Users/simon/hacks/typography/fontrabak/pkg",
+    "lib-font": "^2.4.3"
   }
 }
