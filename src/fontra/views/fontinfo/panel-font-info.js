@@ -1,9 +1,9 @@
-import { recordChanges } from "../core/change-recorder.js";
-import * as html from "../core/html-utils.js";
-import { addStyleSheet } from "../core/html-utils.js";
+import { recordChanges } from "core/change-recorder.js";
+import * as html from "core/html-utils.js";
+import { addStyleSheet } from "core/html-utils.js";
 import { BaseInfoPanel } from "./panel-base.js";
-import { translate } from "/core/localization.js";
-import { Form } from "/web-components/ui-form.js";
+import { translate } from "core/localization.js";
+import { Form } from "web-components/ui-form.js";
 
 const fontInfoFields = [
   // [property name, localization key, type]

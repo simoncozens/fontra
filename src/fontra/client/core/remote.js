@@ -123,6 +123,7 @@ export class RemoteObject {
       if (message["exception"] !== undefined) {
         returnCallbacks.reject(new RemoteError(message["exception"]));
       } else {
+        console.log("resolving", message["return-value"]);
         returnCallbacks.resolve(message["return-value"]);
       }
       delete this._callReturnCallbacks[clientCallID];
@@ -149,7 +150,7 @@ export class RemoteObject {
   }
 
   async _doCall(methodName, args) {
-    // console.log("--- doCall", methodName);
+    console.log("--- doCall", methodName);
     const clientCallID = this._getNextClientCallID();
     const message = {
       "client-call-id": clientCallID,

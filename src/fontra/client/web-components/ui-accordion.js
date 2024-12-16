@@ -1,6 +1,6 @@
-import * as html from "/core/html-utils.js";
-import { UnlitElement } from "/core/html-utils.js";
-import { enumerate } from "/core/utils.js";
+import * as html from "core/html-utils.js";
+import { UnlitElement } from "core/html-utils.js";
+import { enumerate } from "core/utils.js";
 
 export class Accordion extends UnlitElement {
   static styles = `

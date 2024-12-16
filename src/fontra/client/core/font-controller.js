@@ -1,4 +1,4 @@
-import { getClassSchema } from "../core/classes.js";
+import { getClassSchema } from "core/classes.js";
 import {
   applyChange,
   collectChangePaths,
@@ -62,17 +62,22 @@ export class FontController {
   }
 
   async initialize(initListener = true) {
+    console.log("Initialize called", this.font);
     const glyphMap = await this.font.getGlyphMap();
+    console.log(glyphMap);
     this.characterMap = makeCharacterMapFromGlyphMap(glyphMap, false);
     this._rootObject = {};
     this._rootObject.glyphMap = getGlyphMapProxy(glyphMap, this.characterMap);
     this._rootObject.axes = ensureDenseAxes(await this.font.getAxes());
+    console.log(this._rootObject.axes);
     this._rootObject.sources = ensureDenseSources(await this.font.getSources());
+    console.log(this._rootObject.sources);
     this._rootObject.unitsPerEm = await this.font.getUnitsPerEm();
     this._rootObject.customData = await this.font.getCustomData();
     this._rootClassDef = (await getClassSchema())["Font"];
     this.backendInfo = await this.font.getBackEndInfo();
     this.readOnly = await this.font.isReadOnly();
+    console.log("Initialize done ish");
 
     if (initListener) {
       this.addChangeListener(
@@ -82,6 +87,7 @@ export class FontController {
     }
 
     this._resolveInitialized();
+    console.log("Initialize resolved");
   }
 
   subscribeChanges(pathOrPattern, wantLiveChanges) {

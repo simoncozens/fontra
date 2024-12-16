@@ -3,20 +3,18 @@ import {
   doPerformAction,
   getActionIdentifierFromKeyEvent,
   registerAction,
-} from "../core/actions.js";
-import { Backend } from "../core/backend-api.js";
-import { CanvasController } from "../core/canvas-controller.js";
-import { recordChanges } from "../core/change-recorder.js";
-import { applyChange } from "../core/changes.js";
-import { FontController } from "../core/font-controller.js";
-import { staticGlyphToGLIF } from "../core/glyph-glif.js";
-import { pathToSVG } from "../core/glyph-svg.js";
-import { loaderSpinner } from "../core/loader-spinner.js";
-import { ObservableController } from "../core/observable-object.js";
-import {
-  deleteSelectedPoints,
-  filterPathByPointIndices,
-} from "../core/path-functions.js";
+} from "core/actions.js";
+import { Backend } from "core/backend-api.js";
+import { CanvasController } from "core/canvas-controller.js";
+import { recordChanges } from "core/change-recorder.js";
+import { applyChange } from "core/changes.js";
+import { FontController } from "core/font-controller.js";
+import { staticGlyphToGLIF } from "core/glyph-glif.js";
+import { pathToSVG } from "core/glyph-svg.js";
+import * as html from "core/html-utils.js";
+import { loaderSpinner } from "core/loader-spinner.js";
+import { ObservableController } from "core/observable-object.js";
+import { deleteSelectedPoints, filterPathByPointIndices } from "core/path-functions.js";
 import {
   centeredRect,
   rectAddMargin,
@@ -26,10 +24,13 @@ import {
   rectScaleAroundCenter,
   rectSize,
   rectToArray,
-} from "../core/rectangle.js";
-import { SceneView } from "../core/scene-view.js";
-import { isSuperset } from "../core/set-ops.js";
-import { labeledCheckbox, labeledTextInput, pickFile } from "../core/ui-utils.js";
+} from "core/rectangle.js";
+import { SceneView } from "core/scene-view.js";
+import { isSuperset } from "core/set-ops.js";
+import "core/theme-settings.js";
+import { themeController } from "core/theme-settings.js";
+import { getDecomposedIdentity } from "core/transform.js";
+import { labeledCheckbox, labeledTextInput, pickFile } from "core/ui-utils.js";
 import {
   commandKeyProperty,
   enumerate,
@@ -49,12 +50,23 @@ import {
   scheduleCalls,
   writeObjectToURLFragment,
   writeToClipboard,
-} from "../core/utils.js";
-import { addItemwise, mulScalar, subItemwise } from "../core/var-funcs.js";
-import { StaticGlyph, VariableGlyph, copyComponent } from "../core/var-glyph.js";
-import { locationToString, makeSparseLocation } from "../core/var-model.js";
-import { VarPackedPath, joinPaths } from "../core/var-path.js";
-import { makeDisplayPath } from "../core/view-utils.js";
+} from "core/utils.js";
+import { addItemwise, mulScalar, subItemwise } from "core/var-funcs.js";
+import { StaticGlyph, VariableGlyph, copyComponent } from "core/var-glyph.js";
+import { locationToString, makeSparseLocation } from "core/var-model.js";
+import { VarPackedPath, joinPaths } from "core/var-path.js";
+import { makeDisplayPath } from "core/view-utils.js";
+import "web-components/add-remove-buttons.js";
+import "web-components/designspace-location.js";
+import "web-components/glyph-search-list.js";
+import "web-components/grouped-settings.js";
+import "web-components/inline-svg.js";
+import { MenuBar } from "web-components/menu-bar.js";
+import { MenuItemDivider, showMenu } from "web-components/menu-panel.js";
+import "web-components/modal-dialog.js";
+import { dialog, dialogSetup, message } from "web-components/modal-dialog.js";
+import { parsePluginBasePath } from "web-components/plugin-manager.js";
+import "web-components/ui-list.js";
 import { CJKDesignFrame } from "./cjk-design-frame.js";
 import { HandTool } from "./edit-tools-hand.js";
 import { KnifeTool } from "./edit-tools-knife.js";
@@ -69,14 +81,14 @@ import {
   visualizationLayerDefinitions,
 } from "./visualization-layer-definitions.js";
 import { VisualizationLayers } from "./visualization-layers.js";
-import * as html from "/core/html-utils.js";
-import { themeController } from "/core/theme-settings.js";
-import { getDecomposedIdentity } from "/core/transform.js";
-import { MenuBar } from "/web-components/menu-bar.js";
-import { MenuItemDivider, showMenu } from "/web-components/menu-panel.js";
-import { dialog, dialogSetup, message } from "/web-components/modal-dialog.js";
-import { parsePluginBasePath } from "/web-components/plugin-manager.js";
 
+import { applicationSettingsController } from "core/application-settings.js";
+import {
+  ensureLanguageHasLoaded,
+  translate,
+  translatePlural,
+} from "core/localization.js";
+import { ViewController } from "core/view-controller.js";
 import DesignspaceNavigationPanel from "./panel-designspace-navigation.js";
 import GlyphNotePanel from "./panel-glyph-note.js";
 import GlyphSearchPanel from "./panel-glyph-search.js";
@@ -86,13 +98,6 @@ import SelectionInfoPanel from "./panel-selection-info.js";
 import TextEntryPanel from "./panel-text-entry.js";
 import TransformationPanel from "./panel-transformation.js";
 import Panel from "./panel.js";
-import { applicationSettingsController } from "/core/application-settings.js";
-import {
-  ensureLanguageHasLoaded,
-  translate,
-  translatePlural,
-} from "/core/localization.js";
-import { ViewController } from "/core/view-controller.js";
 
 const MIN_CANVAS_SPACE = 200;
 
@@ -939,7 +944,7 @@ export class EditorController extends ViewController {
       const functionName = meta.function;
       let module;
       try {
-        module = await import(`${pluginPath}/${initScript}`);
+        module = await import(/*webpackIgnore: true*/ `${pluginPath}/${initScript}`);
       } catch (e) {
         console.error("Module didn't load");
         console.log(e);
@@ -3130,7 +3135,7 @@ export class EditorController extends ViewController {
 
   async doFindGlyphsThatUseGlyph() {
     const glyphName = this.sceneSettings.selectedGlyphName;
-
+    console.log("Finding glyphs");
     const usedBy = await loaderSpinner(
       this.fontController.findGlyphsThatUseGlyph(glyphName)
     );
@@ -3391,19 +3396,12 @@ export class EditorController extends ViewController {
   }
 
   async _setupFromWindowLocation() {
-    let viewInfo;
+    let viewInfo = {};
     const url = new URL(window.location);
     if (url.hash) {
       viewInfo = loadURLFragment(url.hash);
       if (!viewInfo) {
-        viewInfo = {};
         message("The URL is malformed", "The UI settings could not be restored."); // TODO: translation
-      }
-    } else {
-      // Legacy URL format
-      viewInfo = {};
-      for (const key of url.searchParams.keys()) {
-        viewInfo[key] = JSON.parse(url.searchParams.get(key));
       }
     }
     this.sceneSettings.align = viewInfo["align"] || "center";

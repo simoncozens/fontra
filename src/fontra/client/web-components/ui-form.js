@@ -1,14 +1,9 @@
-import * as html from "../core/html-utils.js";
-import { SimpleElement } from "../core/html-utils.js";
-import { QueueIterator } from "../core/queue-iterator.js";
-import {
-  enumerate,
-  hyphenatedToCamelCase,
-  round,
-  scheduleCalls,
-} from "../core/utils.js";
-import { RangeSlider } from "/web-components/range-slider.js";
-import "/web-components/rotary-control.js";
+import * as html from "core/html-utils.js";
+import { SimpleElement } from "core/html-utils.js";
+import { QueueIterator } from "core/queue-iterator.js";
+import { enumerate, hyphenatedToCamelCase, round, scheduleCalls } from "core/utils.js";
+import { RangeSlider } from "web-components/range-slider.js";
+import "web-components/rotary-control.js";
 
 export class Form extends SimpleElement {
   static styles = `

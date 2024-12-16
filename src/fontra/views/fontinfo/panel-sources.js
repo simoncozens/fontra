@@ -1,25 +1,25 @@
-import { recordChanges } from "../core/change-recorder.js";
-import * as html from "../core/html-utils.js";
-import { addStyleSheet } from "../core/html-utils.js";
-import { translate } from "../core/localization.js";
-import { ObservableController } from "../core/observable-object.js";
+import { recordChanges } from "core/change-recorder.js";
+import * as html from "core/html-utils.js";
+import { addStyleSheet } from "core/html-utils.js";
+import { translate } from "core/localization.js";
+import { ObservableController } from "core/observable-object.js";
 import {
   OptionalNumberFormatter,
   labelForElement,
   labeledCheckbox,
   labeledTextInput,
   textInput,
-} from "../core/ui-utils.js";
-import { enumerate, round } from "../core/utils.js";
-import { BaseInfoPanel } from "./panel-base.js";
+} from "core/ui-utils.js";
+import { enumerate, round } from "core/utils.js";
 import {
   locationToString,
   makeSparseLocation,
   mapAxesFromUserSpaceToSourceSpace,
-} from "/core/var-model.js";
-import "/web-components/add-remove-buttons.js";
-import "/web-components/designspace-location.js";
-import { dialogSetup, message } from "/web-components/modal-dialog.js";
+} from "core/var-model.js";
+import "web-components/add-remove-buttons.js";
+import "web-components/designspace-location.js";
+import { dialogSetup, message } from "web-components/modal-dialog.js";
+import { BaseInfoPanel } from "./panel-base.js";
 
 const cardsInfos = {};
 

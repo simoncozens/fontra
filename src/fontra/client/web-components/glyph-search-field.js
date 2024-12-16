@@ -1,7 +1,7 @@
+import * as html from "core/html-utils.js";
+import { SimpleElement } from "core/html-utils.js";
+import { translate } from "core/localization.js";
 import { themeColorCSS } from "./theme-support.js";
-import * as html from "/core/html-utils.js";
-import { SimpleElement } from "/core/html-utils.js";
-import { translate } from "/core/localization.js";
 
 const colors = {
   "search-input-foreground-color": ["black", "white"],

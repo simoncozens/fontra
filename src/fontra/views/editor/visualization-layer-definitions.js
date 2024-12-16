@@ -1,8 +1,8 @@
-import { difference, isSuperset, union } from "../core/set-ops.js";
-import { subVectors } from "../core/vector.js";
-import { translate } from "/core/localization.js";
-import { rectToPoints } from "/core/rectangle.js";
-import { decomposedToTransform } from "/core/transform.js";
+import { difference, isSuperset, union } from "core/set-ops.js";
+import { subVectors } from "core/vector.js";
+import { translate } from "core/localization.js";
+import { rectToPoints } from "core/rectangle.js";
+import { decomposedToTransform } from "core/transform.js";
 import {
   chain,
   clamp,
@@ -13,7 +13,7 @@ import {
   round,
   unionIndexSets,
   withSavedState,
-} from "/core/utils.js";
+} from "core/utils.js";
 
 export const visualizationLayerDefinitions = [];
 

@@ -1,5 +1,5 @@
-import { Backend } from "/core/backend-api.js";
-import { loaderSpinner } from "/core/loader-spinner.js";
+import { Backend } from "core/backend-api.js";
+import { loaderSpinner } from "core/loader-spinner.js";
 
 export async function startupLandingPage(authenticateFunc) {
   if (authenticateFunc) {

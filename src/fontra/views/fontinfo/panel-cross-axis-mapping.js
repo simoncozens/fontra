@@ -1,18 +1,14 @@
-import { recordChanges } from "../core/change-recorder.js";
-import * as html from "../core/html-utils.js";
-import { addStyleSheet } from "../core/html-utils.js";
-import { ObservableController } from "../core/observable-object.js";
-import {
-  labeledCheckbox,
-  labeledTextInput,
-  setupSortableList,
-} from "../core/ui-utils.js";
-import { enumerate, range } from "../core/utils.js";
+import { recordChanges } from "core/change-recorder.js";
+import * as html from "core/html-utils.js";
+import { addStyleSheet } from "core/html-utils.js";
+import { translate } from "core/localization.js";
+import { ObservableController } from "core/observable-object.js";
+import { labeledCheckbox, labeledTextInput, setupSortableList } from "core/ui-utils.js";
+import { enumerate, range } from "core/utils.js";
+import { mapAxesFromUserSpaceToSourceSpace } from "core/var-model.js";
+import "web-components/add-remove-buttons.js";
+import "web-components/designspace-location.js";
 import { BaseInfoPanel } from "./panel-base.js";
-import { translate } from "/core/localization.js";
-import { mapAxesFromUserSpaceToSourceSpace } from "/core/var-model.js";
-import "/web-components/add-remove-buttons.js";
-import "/web-components/designspace-location.js";
 
 const cardsInfos = {};
 

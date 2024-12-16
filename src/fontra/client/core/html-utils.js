@@ -15,7 +15,7 @@ export class SimpleElement extends HTMLElement {
   }
 
   _attachStyles() {
-    this._appendStyleSheetLink("/css/shared.css");
+    this._appendStyleSheetLink("css/shared.css");
     if (this.constructor.styles) {
       this._appendStyle(this.constructor.styles);
     }

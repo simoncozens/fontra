@@ -1,5 +1,5 @@
-import * as html from "../core/html-utils.js";
-import { addStyleSheet } from "../core/html-utils.js";
+import * as html from "core/html-utils.js";
+import { addStyleSheet } from "core/html-utils.js";
 import { BaseInfoPanel } from "./panel-base.js";
 
 addStyleSheet(`

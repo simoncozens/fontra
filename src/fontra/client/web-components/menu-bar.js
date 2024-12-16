@@ -1,5 +1,5 @@
-import * as html from "../core/html-utils.js";
-import { SimpleElement } from "../core/html-utils.js";
+import * as html from "core/html-utils.js";
+import { SimpleElement } from "core/html-utils.js";
 import { MenuPanel } from "./menu-panel.js";
 
 export class MenuBar extends SimpleElement {

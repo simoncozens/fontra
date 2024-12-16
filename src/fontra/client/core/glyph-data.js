@@ -16,7 +16,7 @@ if (typeof process !== "undefined") {
   glyphDataCSV = fs.readFileSync(path, "utf8");
 } else {
   // Browser
-  const response = await fetch("/data/glyph-data.csv");
+  const response = await fetch("data/glyph-data.csv");
   glyphDataCSV = await response.text();
 }
 

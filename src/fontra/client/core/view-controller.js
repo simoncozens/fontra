@@ -1,19 +1,16 @@
+import { FontController } from "core/font-controller.js";
+import { ensureLanguageHasLoaded } from "core/localization.js";
+import { getRemoteProxy } from "core/remote.js";
+import { message } from "web-components/modal-dialog.js";
 import { Backend } from "./backend-api.js";
-import { FontController } from "./font-controller.js";
-import { getRemoteProxy } from "./remote.js";
-import { makeDisplayPath } from "./view-utils.js";
-import { ensureLanguageHasLoaded } from "/core/localization.js";
-import { message } from "/web-components/modal-dialog.js";
 
 export class ViewController {
   static titlePattern(displayPath) {
     return `Fontra — ${decodeURI(displayPath)}`;
   }
   static async fromBackend() {
-    const pathItems = window.location.pathname.split("/").slice(3);
-    const displayPath = makeDisplayPath(pathItems);
-    document.title = this.titlePattern(displayPath);
-    const projectPath = pathItems.join("/");
+    const projectPath = window.location.search.split("?")[1];
+    document.title = this.titlePattern(projectPath);
 
     await ensureLanguageHasLoaded;
 
