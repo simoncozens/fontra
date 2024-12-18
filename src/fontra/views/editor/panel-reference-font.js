@@ -230,7 +230,7 @@ export default class ReferenceFontPanel extends Panel {
   constructor(editorController) {
     super(editorController);
 
-    fetchJSON("/data/language-mapping.json").then((languageMapping) => {
+    fetchJSON("data/language-mapping.json").then((languageMapping) => {
       this.languageMapping = languageMapping;
     });
 

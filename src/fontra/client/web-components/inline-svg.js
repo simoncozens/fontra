@@ -46,7 +46,7 @@ const svgDataCache = new Map();
 async function cachedSVGData(svgSRC) {
   let svgData = svgDataCache.get(svgSRC);
   if (!svgData) {
-    const response = await fetch(svgSRC);
+    const response = await fetch(svgSRC.replace(/^\//, ""));
     svgData = await response.text();
     svgDataCache.set(svgSRC, svgData);
   }

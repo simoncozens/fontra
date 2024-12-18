@@ -14,7 +14,7 @@ export function getClassSchema(rawSchema) {
       populateSchema(rawSchema);
       resolvePromise(classSchema);
     } else {
-      fetchJSON("/core/classes.json").then((result) => {
+      fetchJSON("core/classes.json").then((result) => {
         populateSchema(result);
         resolvePromise(classSchema);
       });
