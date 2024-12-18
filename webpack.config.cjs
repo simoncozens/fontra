@@ -11,7 +11,7 @@ module.exports = {
     "fontinfo/fontinfo": "./src/fontra/views/fontinfo/fontinfo.js",
   },
   output: {
-    path: path.resolve(__dirname, "target"),
+    path: path.resolve(__dirname, "docs")
   },
   mode: "development",
   experiments: {
