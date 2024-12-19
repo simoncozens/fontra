@@ -6,6 +6,7 @@ import { VarPackedPath } from "./var-path.js";
 import { Font } from "fontrabak";
 
 /** @import { RemoteFont } from "remotefont" */
+/** @import { ServerInfo } from "serverinfo" */
 
 /**
  * @module fontra/client/core/backend-api
@@ -22,6 +23,25 @@ class AbstractBackend {
    * @returns {Promise<string[]>} An array of project names.
    */
   static async getProjects() {}
+
+  /**
+   * Get information about the server.
+   * @returns {Promise<ServerInfo>} Information about the server.
+   */
+  static async getServerInfo() {}
+  /**
+   * Get a suggested glyph name for a given code point.
+   * @param {number} codePoint - The code point.
+   * @returns {Promise<string>} The suggested glyph name.
+   */
+  static async getSuggestedGlyphName(codePoint) {}
+
+  /**
+   * Get the code point for a given glyph name.
+   * @param {string} glyphName - The glyph name.
+   * @returns {Promise<number>} The code point.
+   */
+  static async getCodePointFromGlyphName(glyphName) {}
 
   /**
    * Parse clipboard data.
@@ -72,6 +92,10 @@ class AbstractBackend {
 class PythonBackend extends AbstractBackend {
   static async getProjects() {
     return fetchJSON("/projectlist");
+  }
+
+  static async getServerInfo() {
+    return fetchJSON("/serverinfo");
   }
 
   static async _callServerAPI(functionName, kwargs) {

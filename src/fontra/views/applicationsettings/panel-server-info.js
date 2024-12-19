@@ -1,9 +1,10 @@
+import { Backend } from "core/backend-api.js";
 import * as html from "core/html-utils.js";
 import { addStyleSheet } from "core/html-utils.js";
 import { BaseInfoPanel } from "./panel-base.js";
 import { fetchJSON } from "core/utils.js";
 
-const serverInfo = await fetchJSON("/serverinfo");
+const serverInfo = await Backend.getServerInfo();
 
 addStyleSheet(`
   .fontra-ui-server-info-panel-card {
