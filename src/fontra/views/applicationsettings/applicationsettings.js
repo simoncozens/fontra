@@ -1,4 +1,11 @@
 import * as html from "core/html-utils.js";
+import "core/theme-settings.js";
+import "web-components/grouped-settings.js";
+import "web-components/modal-dialog.js";
+import "web-components/plugin-manager.js";
+
+import { ensureLanguageHasLoaded, translate } from "core/localization.js";
+import { message } from "web-components/modal-dialog.js";
 import { ClipboardPanel } from "./panel-clipboard.js";
 import { DisplayLanguagePanel } from "./panel-display-language.js";
 import { EditorBehaviorPanel } from "./panel-editor-behavior.js";
@@ -6,8 +13,6 @@ import { PluginsManagerPanel } from "./panel-plugins-manager.js";
 import { ServerInfoPanel } from "./panel-server-info.js";
 import { ShortCutsPanel } from "./panel-shortcuts.js";
 import { ThemeSettingsPanel } from "./panel-theme-settings.js";
-import { ensureLanguageHasLoaded, translate } from "core/localization.js";
-import { message } from "web-components/modal-dialog.js";
 
 export class ApplicationSettingsController {
   async start() {

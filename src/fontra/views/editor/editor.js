@@ -730,9 +730,7 @@ export class EditorController extends ViewController {
             title: translate(`application-settings.${panelID}.title`),
             enabled: () => true,
             callback: () => {
-              window.open(
-                `/applicationsettings/applicationsettings.html#${panelID}-panel`
-              );
+              window.open(`applicationsettings.html#${panelID}-panel`);
             },
           }));
         },
@@ -982,7 +980,7 @@ export class EditorController extends ViewController {
     }
     await this.fontController.subscribeChanges(rootSubscriptionPattern, false);
 
-    const blankFont = new FontFace("AdobeBlank", `url("/fonts/AdobeBlank.woff2")`, {});
+    const blankFont = new FontFace("AdobeBlank", `url("fonts/AdobeBlank.woff2")`, {});
     document.fonts.add(blankFont);
     await blankFont.load();
 

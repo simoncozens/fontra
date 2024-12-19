@@ -294,6 +294,16 @@ class RustBackend extends AbstractBackend {
     return ["dummy.ufo"];
   }
 
+  static async getServerInfo() {
+    return Promise.resolve({
+      "Fontra Version": "0.1.0",
+      "Python Version": "This is Rust, my friend",
+      "Startup time": "Instantaneous",
+      "View plugins": ["editor", "fontinfo", "applicationsettings"],
+      "Project Manager": "THE INTERWEBZ",
+    });
+  }
+
   static async getSuggestedGlyphName(codePoint) {
     return "a";
   }

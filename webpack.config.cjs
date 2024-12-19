@@ -9,9 +9,10 @@ module.exports = {
   entry: {
     "editor/start": "./src/fontra/views/editor/start.js",
     "fontinfo/fontinfo": "./src/fontra/views/fontinfo/fontinfo.js",
+    "applicationsettings/start": "./src/fontra/views/applicationsettings/start.js",
   },
   output: {
-    path: path.resolve(__dirname, "docs")
+    path: path.resolve(__dirname, "docs"),
   },
   mode: "development",
   experiments: {
@@ -24,7 +25,7 @@ module.exports = {
     ],
     fallback: {
       fs: false,
-      zlib: require.resolve("browserify-zlib"),
+      zlib: false,
       assert: false,
       util: false,
       stream: false,
@@ -73,6 +74,14 @@ module.exports = {
         {
           from: "src/fontra/client/core/*.json",
           to: "core/[name][ext]",
+        },
+        {
+          from: "src/fontra/views/applicationsettings/applicationsettings.html",
+          to: "[name][ext]",
+        },
+        {
+          from: "src/fontra/views/fontinfo/fontinfo.html",
+          to: "[name][ext]",
         },
       ],
     }),
