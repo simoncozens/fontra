@@ -29,16 +29,18 @@ export const ensureLanguageHasLoaded = new Promise((resolve) => {
 function languageChanged(locale) {
   // Do explicit .replace() because our cache busting mechanism is simplistic,
   // and backtick strings don't work.
-  const translationsPath = "/lang/locale.js".replace("locale", locale);
+  const translationsPath = "../lang/locale.js".replace("locale", locale);
 
-  import(translationsPath)
+  import(/* webpackIgnore: true */ translationsPath)
     .then((mod) => {
       localizationData = mod.strings;
       resolveLanguageHasLoaded();
     })
     .catch((e) => {
       if (locale !== "en") {
-        console.log(`ERROR: could not load language strings for locale "${locale}"`);
+        console.log(
+          `ERROR: could not load language strings for locale "${locale}": ${e}`
+        );
         // Fall back to english
         languageChanged("en");
       } else {
