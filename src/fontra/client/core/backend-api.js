@@ -368,7 +368,7 @@ class RustFont {
     return this.font.isReadOnly();
   }
   async getBackEndInfo() {
-    return this.font.getBackendInfo(); // Fix spelling...
+    return this.font.getBackEndInfo();
   }
   async getCustomData() {
     return this.font.getCustomData();
@@ -381,9 +381,20 @@ class RustFont {
     return Promise.resolve({});
     // return this.font.unsubscribeChanges(pathOrPattern, wantLiveChanges);
   }
+  async editFinal(finalChange, rollbackChange, editLabel, broadcast) {
+    console.log("Edit final: ", finalChange, rollbackChange, editLabel, broadcast);
+    return Promise.resolve({});
+  }
+  async editIncremental(change) {
+    return Promise.resolve({});
+  }
 
   async getFontInfo() {
     return this.font.getFontInfo();
+  }
+
+  async exportAs(options) {
+    return this.font.exportAs(options);
   }
 }
 export const Backend = RustBackend;
