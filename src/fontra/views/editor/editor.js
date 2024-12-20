@@ -107,6 +107,7 @@ const PASTE_BEHAVIOR_ADD = "add";
 export class EditorController extends ViewController {
   constructor(font) {
     super(font);
+    this.projectIdentifier = null;
     const canvas = document.querySelector("#edit-canvas");
     canvas.focus();
 
@@ -839,8 +840,8 @@ export class EditorController extends ViewController {
             enabled: () => enabled,
             callback: () => {
               const url = new URL(window.location);
-              url.pathname = url.pathname.replace("/editor/", "/fontinfo/");
-              url.hash = panelID;
+              url.pathname = url.pathname.replace("/editor", "/fontinfo");
+              // url.hash = panelID;
               window.open(url.toString());
             },
           }));
@@ -3481,7 +3482,9 @@ export class EditorController extends ViewController {
       // an initial setup _from_ the window location
       return;
     }
-    const viewInfo = {};
+    const viewInfo = {
+      projectPath: this.projectIdentifier,
+    };
     const viewBox = this.sceneSettings.viewBox;
 
     if (viewBox && Object.values(viewBox).every((value) => !isNaN(value))) {

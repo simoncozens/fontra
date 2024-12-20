@@ -3,19 +3,26 @@ import { ensureLanguageHasLoaded } from "core/localization.js";
 import { getRemoteProxy } from "core/remote.js";
 import { message } from "web-components/modal-dialog.js";
 import { Backend } from "./backend-api.js";
+import { loadURLFragment } from "./utils.js";
 
 export class ViewController {
   static titlePattern(displayPath) {
     return `Fontra — ${decodeURI(displayPath)}`;
   }
   static async fromBackend() {
-    const projectPath = window.location.search.split("?")[1];
+    // Is the project path in the URL hash?
+    const url = new URL(window.location);
+
+    const projectPath = url.hash
+      ? loadURLFragment(url.hash)["projectPath"]
+      : window.location.search.split("?")[1];
     document.title = this.titlePattern(projectPath);
 
     await ensureLanguageHasLoaded;
 
     const remoteFontEngine = await Backend.remoteFont(projectPath);
     const controller = new this(remoteFontEngine);
+    controller.projectIdentifier = projectPath;
     remoteFontEngine.on("close", (event) => controller.handleRemoteClose(event));
     remoteFontEngine.on("error", (event) => controller.handleRemoteError(event));
     remoteFontEngine.on("messageFromServer", (headline, msg) =>
