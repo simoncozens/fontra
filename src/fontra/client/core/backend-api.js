@@ -381,6 +381,10 @@ class RustFont {
     return Promise.resolve({});
     // return this.font.unsubscribeChanges(pathOrPattern, wantLiveChanges);
   }
+
+  async getFontInfo() {
+    return this.font.getFontInfo();
+  }
 }
 export const Backend = RustBackend;
 // export const Backend = PythonBackend;
