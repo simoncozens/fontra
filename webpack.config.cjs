@@ -7,6 +7,7 @@ crypto.createHash = (algorithm) =>
 
 module.exports = {
   entry: {
+    "index": "./src/fontra/client/index.js",
     "editor/start": "./src/fontra/views/editor/start.js",
     "fontinfo/start": "./src/fontra/views/fontinfo/start.js",
     "applicationsettings/start": "./src/fontra/views/applicationsettings/start.js",

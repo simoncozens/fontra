@@ -5,6 +5,17 @@
     <title>Fontra</title>
     <link href="css/core.css" rel="stylesheet" />
     <link href="index.css" rel="stylesheet" />
+    <style>
+      input[type="text"] {
+        border: 1px solid #ccc;
+        padding: 5px;
+      }
+      a,
+      li {
+        color: #ff004c;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body class="landing-body">
     <div id="global-loader-spinner"></div>
@@ -15,22 +26,79 @@
       </div>
 
       <div class="landing-item" id="project-list" tabindex="3">
-        <input
-          style="width: 100%"
-          type="text"
-          id="project-name"
-          value="googlefonts/googlefonts-project-template/sources/RadioCanadaDisplay.glyphs"
-        />
+        <h2>Connect to a local Fontra server</h2>
+        <table>
+          <tr>
+            <th>Hostname</th>
+            <td>
+              <input
+                style="width: 70%"
+                type="text"
+                id="server-host"
+                value="localhost"
+              />
+            </td>
+          </tr>
+          <tr>
+            <th>Port</th>
+            <td>
+              <input style="width: 70%" type="text" id="server-port" value="8000" />
+            </td>
+          </tr>
+          <tr>
+            <th>Secure</th>
+            <td>
+              <input style="width: 70%" type="checkbox" id="server-secure" />
+            </td>
+          </tr>
+          <tr>
+            <th colspan="2">
+              <button id="open-local">Connect</button>
+            </th>
+          </tr>
+        </table>
+        <ul id="server-project-list"></ul>
+        <h2>Open a Glyphs file on Github</h2>
+        <table>
+          <tr>
+            <th>Username</th>
+            <td>
+              <input style="width: 70%" type="text" id="username" value="googlefonts" />
+            </td>
+          </tr>
+          <tr>
+            <th>Repository</th>
+            <td>
+              <input
+                style="width: 70%"
+                type="text"
+                id="repository"
+                value="googlefonts-project-template"
+              />
+            </td>
+          </tr>
+          <tr>
+            <th>Path</th>
+            <td>
+              <input
+                style="width: 70%"
+                type="text"
+                id="filepath"
+                value="sources/RadioCanadaDisplay.glyphs"
+              />
+            </td>
+          </tr>
+          <tr>
+            <th colspan="2">
+              <button id="open-gh">Open</button>
+            </th>
+          </tr>
+        </table>
+        <h2>Projects on your browser</h2>
+        <ul id="browser-project-list"></ul>
+        <a href="#" id="new-browser-project">New project</a>
       </div>
     </div>
   </body>
-  <script>
-    document.getElementById("project-name").addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        window.location.href =
-          "editor.html?https://cdn.jsdelivr.net/gh/" +
-          document.getElementById("project-name").value;
-      }
-    });
-  </script>
+  <script src="index.js"></script>
 </html>
