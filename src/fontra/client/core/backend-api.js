@@ -1,13 +1,3 @@
-import { getRemoteProxy } from "core/remote.js";
-import { fetchJSON } from "./utils.js";
-import { StaticGlyph } from "./var-glyph.js";
-import { VarPackedPath } from "./var-path.js";
-
-import { Font } from "fontrabak";
-
-/** @import { RemoteFont } from "remotefont" */
-/** @import { ServerInfo } from "serverinfo" */
-
 /**
  * @module fontra/client/core/backend-api
  * @description
@@ -17,31 +7,62 @@ import { Font } from "fontrabak";
  * backends can be used.
  *
  */
-class AbstractBackend {
+
+import { getRemoteProxy } from "core/remote.js";
+import { fetchJSON } from "./utils.js";
+import { StaticGlyph } from "./var-glyph.js";
+import { VarPackedPath } from "./var-path.js";
+
+import { Font } from "fontrabak";
+
+/**
+ * A class that provides an abstraction over the functionality of different Fontra
+ * backends. This class is abstract and should be subclassed to provide a concrete
+ * implementation.
+ */
+export class AbstractBackend {
+  /**
+   *
+   * @param {*} args Backend-specific arguments.
+   */
+  constructor(args) {
+    this.args = args;
+  }
+
   /**
    * Get a list of projects from the backend.
+   * @static
+   * @abstract
    * @returns {Promise<string[]>} An array of project names.
    */
-  static async getProjects() {}
+  async getProjects() {}
+
+  /**
+   * Obtain the user's selected project path.
+   * @abstract
+   * @returns {string} The project path.
+   */
+  getProjectPath() {}
 
   /**
    * Get information about the server.
+   * @abstract
    * @returns {Promise<ServerInfo>} Information about the server.
    */
-  static async getServerInfo() {}
+  async getServerInfo() {}
   /**
    * Get a suggested glyph name for a given code point.
    * @param {number} codePoint - The code point.
    * @returns {Promise<string>} The suggested glyph name.
    */
-  static async getSuggestedGlyphName(codePoint) {}
+  async getSuggestedGlyphName(codePoint) {}
 
   /**
    * Get the code point for a given glyph name.
    * @param {string} glyphName - The glyph name.
    * @returns {Promise<number>} The code point.
    */
-  static async getCodePointFromGlyphName(glyphName) {}
+  async getCodePointFromGlyphName(glyphName) {}
 
   /**
    * Parse clipboard data.
@@ -50,7 +71,7 @@ class AbstractBackend {
    * @param {string} data - The clipboard data.
    * @returns {Promise<StaticGlyph>} - The glyph object, if parsable.
    */
-  static async parseClipboard(data) {}
+  async parseClipboard(data) {}
 
   /**
    * Remove overlaps in a path
@@ -59,47 +80,55 @@ class AbstractBackend {
    * JSON VarPackedPath objects; i.e. they have `coordinates`, `pointTypes`,
    * `contourInfo`, and `pointAttrbutes` fields.
    *
+   * @abstract
    * @param {VarPackedPath} path - The first path.
    * @returns {Promise<VarPackedPath>} The union of the two paths.
    */
-  static async unionPath(path) {}
+  async unionPath(path) {}
 
   /**
    * Subtract one path from another.
+   * @abstract
    * @param {VarPackedPath} pathA - The first path.
    * @param {VarPackedPath} pathB - The second path.
    * @returns {Promise<VarPackedPath>} The difference of the two paths.
    */
-  static async subtractPath(pathA, pathB) {}
+  async subtractPath(pathA, pathB) {}
 
   /**
    * Intersect two paths.
+   * @abstract
    * @param {VarPackedPath} pathA - The first path.
    * @param {VarPackedPath} pathB - The second path.
    * @returns {Promise<VarPackedPath>} The intersection of the two paths.
    */
-  static async intersectPath(pathA, pathB) {}
+  async intersectPath(pathA, pathB) {}
 
   /**
    * Exclude one path from another.
+   * @abstract
    * @param {VarPackedPath} pathA - The first path.
    * @param {VarPackedPath} pathB - The second path.
    * @returns {Promise<VarPackedPath>} The exclusion of the two paths.
    */
-  static async excludePath(pathA, pathB) {}
+  async excludePath(pathA, pathB) {}
 }
 
 class PythonBackend extends AbstractBackend {
-  static async getProjects() {
-    return fetchJSON("/projectlist");
+  async getProjects() {
+    return fetchJSON(this.server(false) + "/projectlist");
   }
 
-  static async getServerInfo() {
-    return fetchJSON("/serverinfo");
+  async getServerInfo() {
+    return fetchJSON(this.server(false) + "/serverinfo");
   }
 
-  static async _callServerAPI(functionName, kwargs) {
-    const response = await fetch(`/api/${functionName}`, {
+  getProjectPath() {
+    return window.location.pathname.split("/").slice(3).join("/");
+  }
+
+  async _callServerAPI(functionName, kwargs) {
+    const response = await fetch(this.server(false) + `/api/${functionName}`, {
       method: "POST",
       body: JSON.stringify(kwargs),
     });
@@ -111,27 +140,35 @@ class PythonBackend extends AbstractBackend {
     return result.returnValue;
   }
 
-  static async parseClipboard(data) {
+  async getSuggestedGlyphName(codePoint) {
+    return await this._callServerAPI("getSuggestedGlyphName", { codePoint });
+  }
+
+  async getCodePointFromGlyphName(glyphName) {
+    return await this._callServerAPI("getCodePointFromGlyphName", { glyphName });
+  }
+
+  async parseClipboard(data) {
     let result = await this._callServerAPI("parseClipboard", { data });
     return result ? StaticGlyph.fromObject(result) : undefined;
   }
 
-  static async unionPath(path) {
+  async unionPath(path) {
     const newPath = await this._callServerAPI("unionPath", { path });
     return VarPackedPath.fromObject(newPath);
   }
 
-  static async subtractPath(pathA, pathB) {
+  async subtractPath(pathA, pathB) {
     const newPath = await this._callServerAPI("subtractPath", { pathA, pathB });
     return VarPackedPath.fromObject(newPath);
   }
 
-  static async intersectPath(pathA, pathB) {
+  async intersectPath(pathA, pathB) {
     const newPath = await this._callServerAPI("intersectPath", { pathA, pathB });
     return VarPackedPath.fromObject(newPath);
   }
 
-  static async excludePath(pathA, pathB) {
+  async excludePath(pathA, pathB) {
     const newPath = await this._callServerAPI("excludePath", { pathA, pathB });
     return VarPackedPath.fromObject(newPath);
   }
@@ -141,10 +178,21 @@ class PythonBackend extends AbstractBackend {
    * @param {string} projectPath
    * @returns {Promise<RemoteFont>} Proxy object representing a font on the server.
    */
-  static async remoteFont(projectPath) {
-    const protocol = window.location.protocol === "http:" ? "ws" : "wss";
-    const wsURL = `${protocol}://${window.location.host}/websocket/${projectPath}`;
+  async remoteFont(projectPath) {
+    const wsURL = `${this.server(true)}/websocket/${projectPath}`;
     return getRemoteProxy(wsURL);
+  }
+
+  server(websocket) {
+    const protocol = websocket
+      ? this.args.secure
+        ? "wss"
+        : "ws"
+      : this.args.secure
+      ? "https"
+      : "http";
+    console.log(this.args.secure, protocol);
+    return `${protocol}://${this.args.host}:${this.args.port}`;
   }
 }
 
@@ -257,44 +305,48 @@ class DummyRemoteFont {
 }
 
 class DummyBackend extends AbstractBackend {
-  static async getProjects() {
+  async getProjects() {
     return ["dummy.ufo"];
   }
 
-  static async getSuggestedGlyphName(codePoint) {
+  async getSuggestedGlyphName(codePoint) {
     return "a";
   }
 
-  static async getCodePointFromGlyphName(glyphName) {
+  async getCodePointFromGlyphName(glyphName) {
     return 61;
   }
 
-  static async parseClipboard(data) {
+  async parseClipboard(data) {
     return;
   }
-  static async unionPath(path) {
+  async unionPath(path) {
     return path;
   }
-  static async subtractPath(pathA, pathB) {
+  async subtractPath(pathA, pathB) {
     return pathA;
   }
-  static async intersectPath(pathA, pathB) {
+  async intersectPath(pathA, pathB) {
     return pathA;
   }
-  static async excludePath(pathA, pathB) {
+  async excludePath(pathA, pathB) {
     return pathA;
   }
-  static async remoteFont(projectPath) {
+  async remoteFont(projectPath) {
     return new DummyRemoteFont();
   }
 }
 
 class RustBackend extends AbstractBackend {
-  static async getProjects() {
+  async getProjects() {
     return ["dummy.ufo"];
   }
 
-  static async getServerInfo() {
+  getProjectPath() {
+    return window.location.search.split("?")[1] || null;
+  }
+
+  async getServerInfo() {
     return Promise.resolve({
       "Fontra Version": "0.1.0",
       "Python Version": "This is Rust, my friend",
@@ -304,34 +356,37 @@ class RustBackend extends AbstractBackend {
     });
   }
 
-  static async getSuggestedGlyphName(codePoint) {
+  async getSuggestedGlyphName(codePoint) {
     return "a";
   }
 
-  static async getCodePointFromGlyphName(glyphName) {
+  async getCodePointFromGlyphName(glyphName) {
     return 61;
   }
 
-  static async parseClipboard(data) {
+  async parseClipboard(data) {
     return;
   }
-  static async unionPath(path) {
+  async unionPath(path) {
     return path;
   }
-  static async subtractPath(pathA, pathB) {
+  async subtractPath(pathA, pathB) {
     return pathA;
   }
-  static async intersectPath(pathA, pathB) {
+  async intersectPath(pathA, pathB) {
     return pathA;
   }
-  static async excludePath(pathA, pathB) {
+  async excludePath(pathA, pathB) {
     return pathA;
   }
-  static async remoteFont(projectPath) {
-    console.log("URL", projectPath);
-    return await fetch(projectPath)
-      .then((result) => result.text())
-      .then((glyphs) => new RustFont(glyphs));
+  async remoteFont(projectPath) {
+    if (projectPath) {
+      return await fetch(projectPath)
+        .then((result) => result.text())
+        .then((glyphs) => new RustFont(glyphs));
+    } else {
+      return new RustFont();
+    }
   }
 }
 
@@ -397,5 +452,25 @@ class RustFont {
     return this.font.exportAs(options);
   }
 }
-export const Backend = RustBackend;
-// export const Backend = PythonBackend;
+
+/** @type {AbstractBackend} */
+export let Backend;
+
+export function setBackend(backend, args) {
+  if (backend == "rust") {
+    Backend = new RustBackend(args);
+  } else if (backend == "dummy") {
+    Backend = new DummyBackend(args);
+  } else if (backend == "python") {
+    Backend = new PythonBackend(args);
+  } else {
+    throw new Error(`Unknown backend: ${backend}`);
+  }
+  console.log(Backend, Backend.args);
+}
+
+let argsText =
+  localStorage.getItem("fontraBackendArgs") ||
+  '{"host": "localhost", "port": 8000, "secure": false}';
+let args = JSON.parse(argsText);
+setBackend(localStorage.getItem("fontraBackend") || "python", args);
