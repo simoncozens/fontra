@@ -15,7 +15,7 @@ export class ViewController {
 
     const projectPath = url.hash
       ? loadURLFragment(url.hash)["projectPath"]
-      : window.location.search.split("?")[1];
+      : Backend.getProjectPath();
     document.title = this.titlePattern(projectPath);
 
     await ensureLanguageHasLoaded;
