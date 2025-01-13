@@ -1,6 +1,7 @@
 {
   "bracketSpacing": true,
   "organizeImportsSkipDestructiveCodeActions": true,
+  "importOrderParserPlugins": ["importAssertions"],
   "plugins": ["prettier-plugin-organize-imports"],
   "printWidth": 88,
   "semi": true,
