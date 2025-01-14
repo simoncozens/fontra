@@ -4,9 +4,9 @@ import {
   registerVisualizationLayerDefinition,
   strokeLine,
 } from "./visualization-layer-definitions.js";
-import { translate } from "/core/localization.js";
-import { range, round, throttleCalls } from "/core/utils.js";
-import * as vector from "/core/vector.js";
+import { translate } from "@fontra/core/localization.js";
+import { range, round, throttleCalls } from "@fontra/core/utils.js";
+import * as vector from "@fontra/core/vector.js";
 
 let thePowerRulerTool; // singleton
 

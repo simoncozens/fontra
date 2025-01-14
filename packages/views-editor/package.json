@@ -1,0 +1,8 @@
+{
+  "name": "@fontra/views-editor",
+  "exports": {
+    ".": "./webpack.config.cjs",
+    "./editor.js": "./src/editor.js"
+  },
+  "type": "module"
+}

@@ -5,8 +5,11 @@ const crypto_orig_createHash = crypto.createHash;
 crypto.createHash = (algorithm) =>
   crypto_orig_createHash(algorithm == "md4" ? "sha256" : algorithm);
 
-const fontracore = require.resolve("@fontra/core");
-const applicationsettings = require.resolve("@fontra/views-applicationsettings");
+const views = [
+  require.resolve("@fontra/core"),
+  require.resolve("@fontra/views-applicationsettings"),
+  require.resolve("@fontra/views-editor"),
+];
 
 module.exports = {
   entry: {},
@@ -30,5 +33,5 @@ module.exports = {
       buffer: require.resolve("buffer"),
     },
   },
-  extends: [fontracore, applicationsettings],
+  extends: views,
 };

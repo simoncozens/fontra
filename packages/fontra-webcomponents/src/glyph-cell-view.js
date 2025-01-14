@@ -1,9 +1,14 @@
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
-import { difference, intersection, symmetricDifference, union } from "@fontra/core/set-ops.js";
+import {
+  difference,
+  intersection,
+  symmetricDifference,
+  union,
+} from "@fontra/core/set-ops.js";
 import { arrowKeyDeltas, assert, enumerate } from "@fontra/core/utils.js";
-import { GlyphCell } from "/web-components/glyph-cell.js";
-import { Accordion } from "/web-components/ui-accordion.js";
+import { GlyphCell } from "./glyph-cell.js";
+import { Accordion } from "./ui-accordion.js";
 
 export class GlyphCellView extends HTMLElement {
   constructor(fontController, settingsController, options) {

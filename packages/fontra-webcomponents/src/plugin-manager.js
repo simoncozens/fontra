@@ -2,9 +2,9 @@ import * as html from "@fontra/core/html-utils.js";
 import { SimpleElement, createDomElement } from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
 import { ObservableController } from "@fontra/core/observable-object.js";
-import "/web-components/add-remove-buttons.js";
-import { dialogSetup, message } from "/web-components/modal-dialog.js";
-import { UIList } from "/web-components/ui-list.js";
+import "./add-remove-buttons.js";
+import { dialogSetup, message } from "./modal-dialog.js";
+import { UIList } from "./ui-list.js";
 
 export class PluginManager extends SimpleElement {
   static styles = `

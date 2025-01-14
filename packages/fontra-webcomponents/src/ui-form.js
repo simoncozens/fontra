@@ -7,8 +7,8 @@ import {
   round,
   scheduleCalls,
 } from "@fontra/core/utils.js";
-import { RangeSlider } from "/web-components/range-slider.js";
-import "/web-components/rotary-control.js";
+import { RangeSlider } from "./range-slider.js";
+import "./rotary-control.js";
 
 export class Form extends SimpleElement {
   static styles = `

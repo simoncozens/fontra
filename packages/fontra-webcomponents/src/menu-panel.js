@@ -1,4 +1,3 @@
-import { themeColorCSS } from "./theme-support.js";
 import {
   canPerformAction,
   doPerformAction,
@@ -8,7 +7,8 @@ import {
 import * as html from "@fontra/core/html-utils.js";
 import { SimpleElement } from "@fontra/core/html-utils.js";
 import { capitalizeFirstLetter, enumerate, reversed } from "@fontra/core/utils.js";
-import { InlineSVG } from "/web-components/inline-svg.js";
+import { InlineSVG } from "./inline-svg.js";
+import { themeColorCSS } from "./theme-support.js";
 
 export const MenuItemDivider = { title: "-" };
 
