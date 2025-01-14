@@ -1,7 +1,7 @@
-import * as html from "/core/html-utils.js";
-import { translate } from "/core/localization.js";
-import { difference, intersection, symmetricDifference, union } from "/core/set-ops.js";
-import { arrowKeyDeltas, assert, enumerate } from "/core/utils.js";
+import * as html from "@fontra/core/html-utils.js";
+import { translate } from "@fontra/core/localization.js";
+import { difference, intersection, symmetricDifference, union } from "@fontra/core/set-ops.js";
+import { arrowKeyDeltas, assert, enumerate } from "@fontra/core/utils.js";
 import { GlyphCell } from "/web-components/glyph-cell.js";
 import { Accordion } from "/web-components/ui-accordion.js";
 

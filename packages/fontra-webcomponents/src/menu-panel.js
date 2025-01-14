@@ -4,10 +4,10 @@ import {
   doPerformAction,
   getActionTitle,
   getShortCutRepresentationFromActionIdentifier,
-} from "/core/actions.js";
-import * as html from "/core/html-utils.js";
-import { SimpleElement } from "/core/html-utils.js";
-import { capitalizeFirstLetter, enumerate, reversed } from "/core/utils.js";
+} from "@fontra/core/actions.js";
+import * as html from "@fontra/core/html-utils.js";
+import { SimpleElement } from "@fontra/core/html-utils.js";
+import { capitalizeFirstLetter, enumerate, reversed } from "@fontra/core/utils.js";
 import { InlineSVG } from "/web-components/inline-svg.js";
 
 export const MenuItemDivider = { title: "-" };

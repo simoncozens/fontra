@@ -1,14 +1,8 @@
 {
-  "name": "@fontra/core",
-  "dependencies": {
-    "@fontra/core": "file:",
-    "bezier-js": "^6.1.4",
-    "fflate": "^0.8.2",
-    "lib-font": "^2.4.3"
-  },
+  "name": "@fontra/views-applicationsettings",
   "exports": {
     ".": "./webpack.config.cjs",
-    "./*": "./src/core/*"
+    "./applicationsettings.js": "./src/applicationsettings.js"
   },
   "scripts": {
     "test": "mocha tests --reporter spec"
