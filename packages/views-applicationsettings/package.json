@@ -2,7 +2,12 @@
   "name": "@fontra/views-applicationsettings",
   "exports": {
     ".": "./webpack.config.cjs",
-    "./applicationsettings.js": "./src/applicationsettings.js"
+    "./start.js": "./src/start.js",
+    "./applicationsettings.js": "./src/applicationsettings.js",
+    "./applicationsettings.html": "./applicationsettings.html"
   },
-  "type": "module"
+  "type": "module",
+  "fontra": {
+    "view": "applicationsettings"
+  }
 }

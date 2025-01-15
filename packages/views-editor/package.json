@@ -2,7 +2,12 @@
   "name": "@fontra/views-editor",
   "exports": {
     ".": "./webpack.config.cjs",
-    "./editor.js": "./src/editor.js"
+    "./start.js": "./src/start.js",
+    "./editor.js": "./src/editor.js",
+    "./editor.html": "./editor.html"
   },
-  "type": "module"
+  "type": "module",
+  "fontra": {
+    "view": "editor"
+  }
 }

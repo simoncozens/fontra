@@ -59,9 +59,6 @@ class FontraServer:
     def setup(self) -> None:
         self.startupTime = datetime.now(timezone.utc).replace(microsecond=0)
         self.httpApp = web.Application()
-        self.viewEntryPoints = {
-            ep.name: ep.value for ep in entry_points(group="fontra.views")
-        }
         self.projectManager.setupWebRoutes(self)
         routes = []
         routes.append(web.get("/", self.rootDocumentHandler))
@@ -69,28 +66,8 @@ class FontraServer:
         routes.append(web.get("/projectlist", self.projectListHandler))
         routes.append(web.get("/serverinfo", self.serverInfoHandler))
         routes.append(web.post("/api/{function:.*}", self.webAPIHandler))
-        for ep in entry_points(group="fontra.webcontent"):
-            routes.append(
-                web.get(
-                    f"/{ep.name}/{{path:.*}}",
-                    partial(self.staticContentHandler, ep.value),
-                )
-            )
-        for viewName, viewPackage in self.viewEntryPoints.items():
-            routes.append(
-                web.get(
-                    f"/{viewName}/-/{{path:.*}}",
-                    partial(self.viewPathHandler, viewName),
-                )
-            )
-            routes.append(
-                web.get(
-                    f"/{viewName}/{{path:.*}}",
-                    partial(self.staticContentHandler, viewPackage),
-                )
-            )
         routes.append(
-            web.get("/{path:.*}", partial(self.staticContentHandler, "fontra.client"))
+            web.get("/{path:.*}", partial(self.staticContentHandler, "fontra.frontend"))
         )
         self.httpApp.add_routes(routes)
         if self.launchWebBrowser:
@@ -245,12 +222,8 @@ class FontraServer:
         pathItems = [""] + request.match_info["path"].split("/")
         modulePath = packageName + ".".join(pathItems[:-1])
         resourceName = pathItems[-1]
-        if self.versionToken is not None:
-            resourceName, versionToken = splitVersionToken(resourceName)
-            if versionToken is not None:
-                if versionToken != self.versionToken:
-                    raise web.HTTPNotFound()
         try:
+            print("Looking for ", modulePath, resourceName)
             data = getResourcePath(modulePath, resourceName).read_bytes()
         except (FileNotFoundError, IsADirectoryError, ModuleNotFoundError):
             raise web.HTTPNotFound()
@@ -258,7 +231,6 @@ class FontraServer:
         if ext not in self.allowedFileExtensions:
             raise web.HTTPNotFound()
         contentType = mimeTypes.get(resourceName.rsplit(".")[-1], "")
-        data = self._addVersionTokenToReferences(data, contentType)
         response = web.Response(body=data, content_type=contentType)
         response.last_modified = self.startupTime
         return response
@@ -267,60 +239,8 @@ class FontraServer:
         return web.HTTPNotFound()
 
     async def rootDocumentHandler(self, request: web.Request) -> web.Response:
-        response = await self.projectManager.projectPageHandler(
-            request, self._addVersionTokenToReferences
-        )
+        response = await self.projectManager.projectPageHandler(request)
         return response
-
-    async def viewPathHandler(
-        self, viewName: str, request: web.Request
-    ) -> web.Response:
-        authToken = await self.projectManager.authorize(request)
-        if not authToken:
-            qs = quote(request.path_qs, safe="")
-            raise web.HTTPFound(f"/?ref={qs}")
-
-        path = request.match_info["path"]
-        if not await self.projectManager.projectAvailable(path, authToken):
-            raise web.HTTPNotFound()
-
-        try:
-            html = getResourcePath(
-                self.viewEntryPoints[viewName], f"{viewName}.html"
-            ).read_bytes()
-        except (FileNotFoundError, ModuleNotFoundError):
-            raise web.HTTPNotFound()
-
-        html = self._addVersionTokenToReferences(html, "text/html")
-
-        return web.Response(body=html, content_type="text/html")
-
-    def _addVersionTokenToReferences(self, data: bytes, contentType: str) -> bytes:
-        if self.versionToken is None:
-            return data
-        jsAllowedFileExtensions = ["css", "js", "svg", "json"]
-        extensionMapping = {
-            "text/html": self.allowedFileExtensions,
-            "text/css": ["woff2", "svg"],
-            # https://github.com/googlefonts/fontra/issues/575
-            "text/javascript": jsAllowedFileExtensions,
-            "application/javascript": jsAllowedFileExtensions,
-        }
-        extensions = extensionMapping.get(contentType)
-        if extensions is not None:
-            data = addVersionTokenToReferences(data, self.versionToken, extensions)
-        return data
-
-
-def addVersionTokenToReferences(
-    data: bytes, versionToken: str, extensions: Collection[str]
-) -> bytes:
-    assert isinstance(data, bytes)
-    pattern = rf"""((['"])[./][./A-Za-z-]+)(\.({"|".join(extensions)})\2)""".encode(
-        "utf-8"
-    )
-    repl = rf"\1.{versionToken}\3".encode("utf-8")
-    return re.sub(pattern, repl, data)
 
 
 def getResourcePath(modulePath: str, resourceName: str) -> Traversable:

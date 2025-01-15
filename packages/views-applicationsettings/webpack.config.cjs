@@ -1,21 +1,14 @@
 let CopyPlugin = require("copy-webpack-plugin");
+const HtmlBundlerPlugin = require("html-bundler-webpack-plugin");
 let path = require("path");
+let plugins = [
+  new HtmlBundlerPlugin({
+    entry: path.resolve(__dirname),
+  }),
+];
+
+console.log(path.resolve(__dirname));
 
 module.exports = {
-  entry: {
-    applicationsettings: {
-      filename: "./applicationsettings.js",
-      import: "@fontra/views-applicationsettings/applicationsettings.js",
-    },
-  },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        {
-          context: path.resolve(__dirname, "assets"),
-          from: "**/*",
-        },
-      ],
-    }),
-  ],
+  plugins: plugins,
 };
