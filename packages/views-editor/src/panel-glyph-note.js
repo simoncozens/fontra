@@ -1,7 +1,7 @@
-import Panel from "./panel.js";
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
 import { throttleCalls } from "@fontra/core/utils.js";
+import Panel from "./panel.ts";
 
 export default class GlyphNotePanel extends Panel {
   identifier = "glyph-note";

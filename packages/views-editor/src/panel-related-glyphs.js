@@ -1,8 +1,11 @@
-import Panel from "./panel.js";
-import { getCodePointFromGlyphName, getSuggestedGlyphName } from "@fontra/core/glyph-data.js";
+import {
+  getCodePointFromGlyphName,
+  getSuggestedGlyphName,
+} from "@fontra/core/glyph-data.js";
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
 import { unicodeMadeOf, unicodeUsedBy } from "@fontra/core/unicode-utils.js";
+import Panel from "./panel.ts";
 
 import { getCharFromCodePoint, throttleCalls } from "@fontra/core/utils.js";
 import { GlyphCellView } from "@fontra/web-components/glyph-cell-view.js";

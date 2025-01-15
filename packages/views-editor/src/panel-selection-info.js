@@ -1,4 +1,3 @@
-import Panel from "./panel.js";
 import { recordChanges } from "@fontra/core/change-recorder.js";
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
@@ -18,6 +17,7 @@ import {
 } from "@fontra/core/utils.js";
 import { dialog } from "@fontra/web-components/modal-dialog.js";
 import { Form } from "@fontra/web-components/ui-form.js";
+import Panel from "./panel.ts";
 
 export default class SelectionInfoPanel extends Panel {
   identifier = "selection-info";

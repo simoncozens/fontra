@@ -3,7 +3,7 @@
 import { VariationError } from "./errors.js";
 import { isSuperset } from "./set-ops.js";
 import { clamp, reversedEnumerate } from "./utils.js";
-import { addItemwise, mulScalar, subItemwise } from "./var-funcs.js";
+import { addItemwise, mulScalar, subItemwise } from "./var-funcs.ts";
 
 export class VariationModel {
   constructor(locations, axisOrder = null) {

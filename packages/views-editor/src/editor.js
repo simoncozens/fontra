@@ -10,8 +10,10 @@ import { CanvasController } from "@fontra/core/canvas-controller.js";
 import { recordChanges } from "@fontra/core/change-recorder.js";
 import { applyChange } from "@fontra/core/changes.js";
 import { FontController } from "@fontra/core/font-controller.js";
+import { makeFontraMenuBar } from "@fontra/core/fontra-menus.js";
 import { staticGlyphToGLIF } from "@fontra/core/glyph-glif.js";
 import { pathToSVG } from "@fontra/core/glyph-svg.js";
+import * as html from "@fontra/core/html-utils.js";
 import { loaderSpinner } from "@fontra/core/loader-spinner.js";
 import { ObservableController } from "@fontra/core/observable-object.js";
 import {
@@ -30,6 +32,8 @@ import {
 } from "@fontra/core/rectangle.js";
 import { SceneView } from "@fontra/core/scene-view.js";
 import { isSuperset } from "@fontra/core/set-ops.js";
+import { themeController } from "@fontra/core/theme-settings.js";
+import { getDecomposedIdentity } from "@fontra/core/transform.js";
 import { labeledCheckbox, labeledTextInput, pickFile } from "@fontra/core/ui-utils.js";
 import {
   commandKeyProperty,
@@ -51,11 +55,14 @@ import {
   writeObjectToURLFragment,
   writeToClipboard,
 } from "@fontra/core/utils.js";
-import { addItemwise, mulScalar, subItemwise } from "@fontra/core/var-funcs.js";
+import { addItemwise, mulScalar, subItemwise } from "@fontra/core/var-funcs.ts";
 import { StaticGlyph, VariableGlyph, copyComponent } from "@fontra/core/var-glyph.js";
 import { locationToString, makeSparseLocation } from "@fontra/core/var-model.js";
 import { VarPackedPath, joinPaths } from "@fontra/core/var-path.js";
 import { makeDisplayPath } from "@fontra/core/view-utils.js";
+import { MenuItemDivider, showMenu } from "@fontra/web-components/menu-panel.js";
+import { dialog, dialogSetup, message } from "@fontra/web-components/modal-dialog.js";
+import { parsePluginBasePath } from "@fontra/web-components/plugin-manager.js";
 import { CJKDesignFrame } from "./cjk-design-frame.js";
 import { HandTool } from "./edit-tools-hand.js";
 import { KnifeTool } from "./edit-tools-knife.js";
@@ -64,20 +71,20 @@ import { PointerTools } from "./edit-tools-pointer.js";
 import { PowerRulerTool } from "./edit-tools-power-ruler.js";
 import { ShapeTool } from "./edit-tools-shape.js";
 import { SceneController } from "./scene-controller.js";
-import { MIN_SIDEBAR_WIDTH, Sidebar } from "./sidebar.js";
+import { MIN_SIDEBAR_WIDTH, Sidebar } from "./sidebar.ts";
 import {
   allGlyphsCleanVisualizationLayerDefinition,
   visualizationLayerDefinitions,
 } from "./visualization-layer-definitions.js";
-import { VisualizationLayers } from "./visualization-layers.js";
-import { makeFontraMenuBar } from "@fontra/core/fontra-menus.js";
-import * as html from "@fontra/core/html-utils.js";
-import { themeController } from "@fontra/core/theme-settings.js";
-import { getDecomposedIdentity } from "@fontra/core/transform.js";
-import { MenuItemDivider, showMenu } from "@fontra/web-components/menu-panel.js";
-import { dialog, dialogSetup, message } from "@fontra/web-components/modal-dialog.js";
-import { parsePluginBasePath } from "@fontra/web-components/plugin-manager.js";
+import { VisualizationLayers } from "./visualization-layers.ts";
 
+import { applicationSettingsController } from "@fontra/core/application-settings.js";
+import {
+  ensureLanguageHasLoaded,
+  translate,
+  translatePlural,
+} from "@fontra/core/localization.js";
+import { ViewController } from "@fontra/core/view-controller.js";
 import DesignspaceNavigationPanel from "./panel-designspace-navigation.js";
 import GlyphNotePanel from "./panel-glyph-note.js";
 import GlyphSearchPanel from "./panel-glyph-search.js";
@@ -86,14 +93,6 @@ import RelatedGlyphsPanel from "./panel-related-glyphs.js";
 import SelectionInfoPanel from "./panel-selection-info.js";
 import TextEntryPanel from "./panel-text-entry.js";
 import TransformationPanel from "./panel-transformation.js";
-import Panel from "./panel.js";
-import { applicationSettingsController } from "@fontra/core/application-settings.js";
-import {
-  ensureLanguageHasLoaded,
-  translate,
-  translatePlural,
-} from "@fontra/core/localization.js";
-import { ViewController } from "@fontra/core/view-controller.js";
 
 const MIN_CANVAS_SPACE = 200;
 

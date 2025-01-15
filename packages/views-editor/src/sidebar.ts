@@ -1,18 +1,23 @@
-import { clamp, hyphenatedToLabel } from "@fontra/core/utils.js";
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
+import { clamp, hyphenatedToLabel } from "@fontra/core/utils.js";
+import Panel from "./panel.js";
 
 export const MIN_SIDEBAR_WIDTH = 200;
 export const MAX_SIDEBAR_WIDTH = 500;
 
 export class Sidebar {
-  constructor(identifier) {
+  panelIdentifiers: string[];
+  container: HTMLElement;
+  identifier: string;
+
+  constructor(identifier: string) {
     this.identifier = identifier;
     this.container = null;
     this.panelIdentifiers = [];
   }
 
-  addPanel(panelElement) {
+  addPanel(panelElement: Panel) {
     if (!this.container) {
       throw new Error("Sidebar needs to be attached to a container element.");
     }
@@ -50,7 +55,7 @@ export class Sidebar {
     );
   }
 
-  toggle(tabName) {
+  toggle(tabName: string) {
     const container = document.querySelector(`.sidebar-container.${this.identifier}`);
     let toggledTab;
     for (const panelIdentifier of this.panelIdentifiers) {
@@ -89,7 +94,7 @@ export class Sidebar {
     return toggledTab.classList.contains("selected");
   }
 
-  attach(element) {
+  attach(element: HTMLElement) {
     this.container = element;
     this.initResizeGutter();
 
@@ -103,12 +108,12 @@ export class Sidebar {
     }
   }
 
-  applyWidth(width, saveLocalStorage = false) {
+  applyWidth(width: number, saveLocalStorage = false) {
     if (width === undefined) {
       return;
     }
     if (saveLocalStorage) {
-      localStorage.setItem(`fontra-sidebar-width-${this.identifier}`, width);
+      localStorage.setItem(`fontra-sidebar-width-${this.identifier}`, `${width}`);
     }
     document.documentElement.style.setProperty(
       `--sidebar-content-width-${this.identifier}`,
@@ -137,12 +142,12 @@ export class Sidebar {
   }
 
   initResizeGutter() {
-    let initialWidth;
-    let initialPointerCoordinateX;
-    let sidebarResizing;
-    let growDirection;
-    let width;
-    const onPointerMove = (event) => {
+    let initialWidth: number;
+    let initialPointerCoordinateX: number;
+    let sidebarResizing: HTMLElement | undefined;
+    let growDirection: string;
+    let width: number;
+    const onPointerMove = (event: MouseEvent) => {
       if (sidebarResizing) {
         let cssProperty;
         if (growDirection === "left") {
@@ -166,10 +171,10 @@ export class Sidebar {
       document.documentElement.classList.remove("sidebar-resizing");
       document.removeEventListener("pointermove", onPointerMove);
     };
-    const gutter = document.querySelector(
+    const gutter: HTMLElement = document.querySelector(
       `.sidebar-container.${this.identifier} .sidebar-resize-gutter`
     );
-    gutter.addEventListener("pointerdown", (event) => {
+    gutter.addEventListener("pointerdown", (event: PointerEvent) => {
       sidebarResizing = gutter.parentElement;
       initialWidth = sidebarResizing.getBoundingClientRect().width;
       initialPointerCoordinateX = event.clientX;

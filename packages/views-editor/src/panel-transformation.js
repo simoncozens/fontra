@@ -1,8 +1,10 @@
 import { registerAction } from "@fontra/core/actions.js";
 import { Backend } from "@fontra/core/backend-api.js";
-import { ChangeCollector, applyChange, consolidateChanges } from "@fontra/core/changes.js";
-import { EditBehaviorFactory } from "./edit-behavior.js";
-import Panel from "./panel.js";
+import {
+  ChangeCollector,
+  applyChange,
+  consolidateChanges,
+} from "@fontra/core/changes.js";
 import * as html from "@fontra/core/html-utils.js";
 import { translate } from "@fontra/core/localization.js";
 import {
@@ -22,6 +24,8 @@ import {
 import { copyBackgroundImage, copyComponent } from "@fontra/core/var-glyph.js";
 import { VarPackedPath } from "@fontra/core/var-path.js";
 import { Form } from "@fontra/web-components/ui-form.js";
+import { EditBehaviorFactory } from "./edit-behavior.js";
+import Panel from "./panel.ts";
 
 export default class TransformationPanel extends Panel {
   identifier = "selection-transformation";

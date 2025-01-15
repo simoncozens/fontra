@@ -35,7 +35,7 @@ import {
   parseSelection,
   range,
 } from "./utils.js";
-import { addItemwise } from "./var-funcs.js";
+import { addItemwise } from "./var-funcs.ts";
 import { StaticGlyph } from "./var-glyph.js";
 import {
   locationToString,

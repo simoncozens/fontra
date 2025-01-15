@@ -8,6 +8,7 @@ import {
 } from "@fontra/core/changes.js";
 import { decomposeComponents } from "@fontra/core/glyph-controller.js";
 import { glyphLinesFromText, textFromGlyphLines } from "@fontra/core/glyph-lines.js";
+import { translate, translatePlural } from "@fontra/core/localization.js";
 import { MouseTracker } from "@fontra/core/mouse-tracker.js";
 import { ObservableController } from "@fontra/core/observable-object.js";
 import {
@@ -15,8 +16,18 @@ import {
   scalePoint,
   splitPathAtPointIndices,
 } from "@fontra/core/path-functions.js";
-import { equalRect, offsetRect, rectAddMargin, rectRound } from "@fontra/core/rectangle.js";
-import { difference, isSuperset, lenientIsEqualSet, union } from "@fontra/core/set-ops.js";
+import {
+  equalRect,
+  offsetRect,
+  rectAddMargin,
+  rectRound,
+} from "@fontra/core/rectangle.js";
+import {
+  difference,
+  isSuperset,
+  lenientIsEqualSet,
+  union,
+} from "@fontra/core/set-ops.js";
 import {
   arrowKeyDeltas,
   assert,
@@ -30,10 +41,9 @@ import {
 } from "@fontra/core/utils.js";
 import { VarPackedPath, packContour } from "@fontra/core/var-path.js";
 import * as vector from "@fontra/core/vector.js";
+import { dialog, message } from "@fontra/web-components/modal-dialog.js";
 import { EditBehaviorFactory } from "./edit-behavior.js";
 import { SceneModel, getSelectedGlyphName } from "./scene-model.js";
-import { translate, translatePlural } from "@fontra/core/localization.js";
-import { dialog, message } from "@fontra/web-components/modal-dialog.js";
 
 export class SceneController {
   constructor(

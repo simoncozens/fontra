@@ -1,5 +1,5 @@
 import { registerAction } from "@fontra/core/actions.js";
-import Panel from "./panel.js";
+import Panel from "./panel.ts";
 
 import {
   createDomElement,

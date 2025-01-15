@@ -39,6 +39,12 @@ module.exports = {
   experiments: {
     asyncWebAssembly: true,
   },
+  resolve: {
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+      ".js": [".ts", ".js"],
+    },
+  },
   module: {
     rules: [
       {
@@ -48,6 +54,14 @@ module.exports = {
       {
         test: /\.(ico|png|jp?g|svg)/,
         type: "asset/resource",
+      },
+      {
+        test: /\.tsx?$/,
+        loader: "babel-loader",
+        exclude: /node_modules/,
+        options: {
+          presets: ["@babel/preset-env", "@babel/preset-typescript"],
+        },
       },
     ],
   },
