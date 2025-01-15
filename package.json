@@ -2,7 +2,8 @@
   "name": "fontra",
   "scripts": {
     "test": "mocha tests --reporter spec",
-    "build": "webpack --config webpack.config.cjs"
+    "build": "webpack --config webpack.config.cjs",
+    "build-watch": "webpack --config webpack.config.cjs --watch"
   },
   "type": "module",
   "devDependencies": {
