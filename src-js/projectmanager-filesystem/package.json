@@ -1,0 +1,11 @@
+{
+  "name": "@fontra/projectmanager-filesystem",
+  "exports": {
+    "./landing.js": "./src/landing.js",
+    "./landing.html": "./landing.html"
+  },
+  "type": "module",
+  "fontra": {
+    "projectmanager": "filesystem"
+  }
+}
