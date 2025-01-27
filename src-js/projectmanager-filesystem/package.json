@@ -1,5 +1,6 @@
 {
   "name": "@fontra/projectmanager-filesystem",
+  "version": "0.0.1",
   "exports": {
     "./landing.js": "./src/landing.js",
     "./landing.html": "./landing.html"
