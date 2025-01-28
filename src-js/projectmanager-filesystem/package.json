@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "exports": {
     "./landing.js": "./src/landing.js",
-    "./landing.html": "./landing.html"
+    "./landing.html": "./landing.html",
+    "./assets/*": "./assets/*"
   },
   "type": "module",
   "fontra": {
