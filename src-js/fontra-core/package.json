@@ -16,6 +16,7 @@
     "test": "mocha tests --reporter spec"
   },
   "type": "module",
+  "version": "0.0.1",
   "devDependencies": {
     "chai": "^5.1.2",
     "chai-almost": "^1.0.1",
