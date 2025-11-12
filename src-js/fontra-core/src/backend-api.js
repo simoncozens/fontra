@@ -451,6 +451,17 @@ class RustFont {
   async exportAs(options) {
     return this.font.exportAs(options);
   }
+
+  async getKerning() {
+    return Promise.resolve({});
+  }
+
+  async getFeatures() {
+    return Promise.resolve({ language: null, text: null, customData: {} });
+  }
+  async findGlyphsThatUseGlyph(glyphname) {
+    return Promise.resolve([]);
+  }
 }
 
 /** @type {AbstractBackend} */

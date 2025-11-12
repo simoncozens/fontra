@@ -1,3 +1,4 @@
+import { OpenTypeFeatures } from ".";
 import { IntoVariableGlyph } from "./var-glyph";
 
 interface FontImageData {
@@ -146,4 +147,14 @@ interface RemoteFont {
    * Return information about this font.
    */
   getFontInfo(): Promise<FontInfo>;
+
+  /**
+   * Return kerning information.
+   */
+  getKerning(): Promise<Record<string, Kerning>>;
+
+  /**
+   * Return the font's OpenType features.
+   */
+  getFeatures(): Promise<OpenTypeFeatures>;
 }

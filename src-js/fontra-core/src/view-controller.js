@@ -27,7 +27,7 @@ export class ViewController {
 
     const remoteFontEngine = await Backend.remoteFont(projectIdentifier);
     const controller = new this(remoteFontEngine);
-    controller.projectIdentifier = projectPath;
+    controller.projectIdentifier = projectIdentifier;
     remoteFontEngine.on("close", (event) => controller.handleRemoteClose(event));
     remoteFontEngine.on("error", (event) => controller.handleRemoteError(event));
     remoteFontEngine.on("initializationError", (error) =>
