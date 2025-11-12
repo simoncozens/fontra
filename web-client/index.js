@@ -1,4 +1,5 @@
 import { Backend, setBackend } from "@fontra/core/backend-api.js";
+import { dumpURLFragment } from "@fontra/core/utils.js";
 
 async function populateProjectList() {
   let projects = await Backend.getProjects();
@@ -15,13 +16,16 @@ async function populateProjectList() {
 }
 document.getElementById("open-gh").addEventListener("click", function () {
   localStorage.setItem("fontraBackend", "rust");
-  window.location.href =
-    "editor.html?https://cdn.jsdelivr.net/gh/" +
-    document.getElementById("username").value +
-    "/" +
-    document.getElementById("repository").value +
-    "/" +
-    document.getElementById("filepath").value;
+  let projectPath = {
+    projectPath:
+      "https://cdn.jsdelivr.net/gh/" +
+      document.getElementById("username").value +
+      "/" +
+      document.getElementById("repository").value +
+      "/" +
+      document.getElementById("filepath").value,
+  };
+  window.location.href = "editor.html" + dumpURLFragment(projectPath);
 });
 document.getElementById("open-local").addEventListener("click", function () {
   localStorage.setItem("fontraBackend", "python");
