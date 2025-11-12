@@ -19,7 +19,7 @@ export class ViewController {
 
     const projectIdentifier = url.hash
       ? loadURLFragment(url.hash)["projectPath"]
-      : url.searchParams.get("project");
+      : Backend.getProjectPath();
     const displayName = this.displayName(projectIdentifier);
     document.title = this.titlePattern(displayName);
 
