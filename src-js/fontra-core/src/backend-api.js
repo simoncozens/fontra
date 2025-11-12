@@ -8,7 +8,7 @@
  *
  */
 
-import { getRemoteProxy } from "core/remote.js";
+import { getRemoteProxy } from "@fontra/core/remote.js";
 import { fetchJSON } from "./utils.js";
 import { StaticGlyph } from "./var-glyph.js";
 import { VarPackedPath } from "./var-path.js";

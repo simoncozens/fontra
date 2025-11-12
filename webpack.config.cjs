@@ -12,7 +12,7 @@ module.exports = (_env, argv) => {
         // to provide our own.
         new HtmlBundlerPlugin({
           entry: {
-            landing: require.resolve("@fontra/projectmanager-filesystem/landing.html"),
+            index: require.resolve("./web-client/index.html"),
             applicationsettings: require.resolve(
               "@fontra/views-applicationsettings/applicationsettings.html"
             ),

@@ -1,3 +1,4 @@
+import { Backend } from "@fontra/core/backend-api.js";
 import * as html from "@fontra/core/html-utils.js";
 import { addStyleSheet } from "@fontra/core/html-utils.js";
 import { MultiPanelBasePanel } from "@fontra/core/multi-panel.js";
