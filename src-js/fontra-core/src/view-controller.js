@@ -6,6 +6,7 @@ import { Backend } from "./backend-api.js";
 import { RemoteError } from "./errors.js";
 import { FontController } from "./font-controller.js";
 import { getRemoteProxy } from "./remote.js";
+import { loadURLFragment } from "./utils.js";
 
 export class ViewController {
   static titlePattern(displayName) {
@@ -13,12 +14,20 @@ export class ViewController {
   }
 
   static async fromBackend() {
-    const projectIdentifier = new URL(window.location).searchParams.get("project");
+    // Is the project path in the URL hash?
+    const url = new URL(window.location);
+
+    const projectIdentifier = url.hash
+      ? loadURLFragment(url.hash)["projectPath"]
+      : url.searchParams.get("project");
+    const displayName = this.displayName(projectIdentifier);
+    document.title = this.titlePattern(displayName);
 
     await ensureLanguageHasLoaded;
 
     const remoteFontEngine = await Backend.remoteFont(projectIdentifier);
     const controller = new this(remoteFontEngine);
+    controller.projectIdentifier = projectPath;
     remoteFontEngine.on("close", (event) => controller.handleRemoteClose(event));
     remoteFontEngine.on("error", (event) => controller.handleRemoteError(event));
     remoteFontEngine.on("initializationError", (error) =>
