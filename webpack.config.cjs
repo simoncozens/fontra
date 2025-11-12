@@ -5,7 +5,7 @@ module.exports = (_env, argv) => {
   return import("@fontra/core/webpack-base.js").then(({ makeConfig }) => {
     return makeConfig({
       home: __dirname,
-      destination: path.resolve(__dirname, "src", "fontra", "client"),
+      destination: path.resolve(__dirname, "docs"),
       views: [
         // Unfortunately we run into version compatibility problems if we get
         // webpack-base.js to provide its own HtmlBundlerPlugin, so we have
