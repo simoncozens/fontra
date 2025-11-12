@@ -29,7 +29,7 @@ export const ensureLanguageHasLoaded = new Promise((resolve) => {
 function languageChanged(locale) {
   // Do explicit .replace() because our cache busting mechanism is simplistic,
   // and backtick strings don't work.
-  const translationsPath = "/lang/locale.js".replace("locale", locale);
+  const translationsPath = "../lang/locale.js".replace("locale", locale);
 
   import(/*webpackIgnore: true*/ translationsPath)
     .then((mod) => {
