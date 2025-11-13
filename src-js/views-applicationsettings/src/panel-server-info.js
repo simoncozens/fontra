@@ -3,7 +3,6 @@ import * as html from "@fontra/core/html-utils.js";
 import { addStyleSheet } from "@fontra/core/html-utils.js";
 import { MultiPanelBasePanel } from "@fontra/core/multi-panel.js";
 import { fetchJSON } from "@fontra/core/utils.js";
-import { Backend } from "@fontra/core/backend-api.js";
 import { BaseInfoPanel } from "./panel-base.js";
 
 const serverInfo = await Backend.getServerInfo();
