@@ -13,7 +13,7 @@ import {
   unionIndexSets,
 } from "@fontra/core/utils.js";
 import { copyBackgroundImage, copyComponent } from "@fontra/core/var-glyph.js";
-import * as vector from "@fontra/core/vector.js";
+import * as vector from "@fontra/core/vector.ts";
 import {
   ANY,
   NIL,

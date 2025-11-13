@@ -14,7 +14,7 @@ import {
   unionIndexSets,
   withSavedState,
 } from "@fontra/core/utils.js";
-import { subVectors } from "@fontra/core/vector.js";
+import { subVectors } from "@fontra/core/vector.ts";
 
 export const visualizationLayerDefinitions = [];
 

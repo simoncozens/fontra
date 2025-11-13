@@ -25,7 +25,7 @@ import {
   reversed,
   valueInRange,
 } from "@fontra/core/utils.js";
-import * as vector from "@fontra/core/vector.js";
+import * as vector from "@fontra/core/vector.ts";
 
 export class SceneModel {
   constructor(
