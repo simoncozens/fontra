@@ -1,5 +1,6 @@
-import { equalRect, normalizeRect, Rectangle, sectRect } from "./rectangle.ts";
-import { Point } from "./transform.ts";
+import type { Rectangle } from "./rectangle.ts";
+import { equalRect, normalizeRect, sectRect } from "./rectangle.ts";
+import type { Point } from "./transform.ts";
 import { reversed } from "./utils.js";
 
 /** Return true if the point (x,y) is inside the convex polygon
