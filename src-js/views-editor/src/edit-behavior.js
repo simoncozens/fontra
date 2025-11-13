@@ -1,5 +1,5 @@
 import { consolidateChanges } from "@fontra/core/changes.js";
-import { polygonIsConvex } from "@fontra/core/convex-hull.js";
+import { polygonIsConvex } from "@fontra/core/convex-hull.ts";
 import {
   Transform,
   decomposedToTransform,

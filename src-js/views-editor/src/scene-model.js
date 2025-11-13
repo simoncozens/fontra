@@ -1,7 +1,7 @@
 import {
   pointInConvexPolygon,
   rectIntersectsPolygon,
-} from "@fontra/core/convex-hull.js";
+} from "@fontra/core/convex-hull.ts";
 import { loaderSpinner } from "@fontra/core/loader-spinner.js";
 import {
   centeredRect,

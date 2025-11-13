@@ -2,7 +2,7 @@ import {
   pointInConvexPolygon,
   rectIntersectsPolygon,
   simplePolygonArea,
-} from "./convex-hull.js";
+} from "./convex-hull.ts";
 import {
   DiscreteVariationModel,
   findNearestLocationIndex,

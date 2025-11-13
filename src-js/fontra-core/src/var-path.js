@@ -1,5 +1,5 @@
 import { Bezier } from "bezier-js";
-import { convexHull } from "./convex-hull.js";
+import { convexHull } from "./convex-hull.ts";
 import { VariationError } from "./errors.js";
 import { centeredRect, pointInRect, rectFromPoints, updateRect } from "./rectangle.ts";
 import {

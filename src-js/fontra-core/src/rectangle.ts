@@ -1,6 +1,6 @@
 import { isNumber } from "./utils.js";
 
-interface Rect {
+export interface Rectangle {
   xMin: number;
   yMin: number;
   xMax: number;
@@ -15,7 +15,11 @@ interface Rect {
  * @param rect
  * @returns boolean
  */
-export function pointInRect(x: number, y: number, rect: Rect | undefined): boolean {
+export function pointInRect(
+  x: number,
+  y: number,
+  rect: Rectangle | undefined
+): boolean {
   if (!rect) {
     return false;
   }
@@ -27,7 +31,7 @@ export function centeredRect(
   y: number,
   width: number,
   height?: number
-): Rect {
+): Rectangle {
   if (height === undefined) {
     height = width;
   }
@@ -41,7 +45,7 @@ export function centeredRect(
   };
 }
 
-export function normalizeRect(rect: Rect): Rect {
+export function normalizeRect(rect: Rectangle): Rectangle {
   const nRect = {
     xMin: Math.min(rect.xMin, rect.xMax),
     yMin: Math.min(rect.yMin, rect.yMax),
@@ -62,7 +66,7 @@ export function normalizeRect(rect: Rect): Rect {
  *     If the input rectangles intersect, returns the intersecting rectangle.
  *     Returns ``undefined`` if the input rectangles do not intersect.
  */
-export function sectRect(rect1: Rect, rect2: Rect): Rect | undefined {
+export function sectRect(rect1: Rectangle, rect2: Rectangle): Rectangle | undefined {
   const xMin = Math.max(rect1.xMin, rect2.xMin);
   const yMin = Math.max(rect1.yMin, rect2.yMin);
   const xMax = Math.min(rect1.xMax, rect2.xMax);
@@ -73,7 +77,7 @@ export function sectRect(rect1: Rect, rect2: Rect): Rect | undefined {
   return { xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax };
 }
 
-export function unionRect(...rectangles: Rect[]): Rect | undefined {
+export function unionRect(...rectangles: Rectangle[]): Rectangle | undefined {
   if (!rectangles.length) {
     return undefined;
   }
@@ -92,7 +96,7 @@ export function unionRect(...rectangles: Rect[]): Rect | undefined {
   return { xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax };
 }
 
-export function offsetRect(rect: Rect, x: number, y: number): Rect {
+export function offsetRect(rect: Rectangle, x: number, y: number): Rectangle {
   return {
     xMin: rect.xMin + x,
     yMin: rect.yMin + y,
@@ -101,7 +105,7 @@ export function offsetRect(rect: Rect, x: number, y: number): Rect {
   };
 }
 
-export function scaleRect(rect: Rect, sx: number, sy?: number): Rect {
+export function scaleRect(rect: Rectangle, sx: number, sy?: number): Rectangle {
   if (sy === undefined) {
     sy = sx;
   }
@@ -113,7 +117,7 @@ export function scaleRect(rect: Rect, sx: number, sy?: number): Rect {
   };
 }
 
-export function insetRect(rect: Rect, dx: number, dy: number): Rect {
+export function insetRect(rect: Rectangle, dx: number, dy: number): Rectangle {
   return {
     xMin: rect.xMin + dx,
     yMin: rect.yMin + dy,
@@ -122,7 +126,7 @@ export function insetRect(rect: Rect, dx: number, dy: number): Rect {
   };
 }
 
-export function equalRect(rect1: Rect, rect2: Rect): boolean {
+export function equalRect(rect1: Rectangle, rect2: Rectangle): boolean {
   return (
     rect1.xMin === rect2.xMin &&
     rect1.yMin === rect2.yMin &&
@@ -131,34 +135,36 @@ export function equalRect(rect1: Rect, rect2: Rect): boolean {
   );
 }
 
-export function rectCenter(rect: Rect) {
+export function rectCenter(rect: Rectangle) {
   return { x: (rect.xMin + rect.xMax) / 2, y: (rect.yMin + rect.yMax) / 2 };
 }
 
-export function rectSize(rect: Rect) {
+export function rectSize(rect: Rectangle) {
   return {
     width: Math.abs(rect.xMax - rect.xMin),
     height: Math.abs(rect.yMax - rect.yMin),
   };
 }
 
-export function rectFromArray(array: number[]): Rect {
+export function rectFromArray(array: number[]): Rectangle {
   if (array.length != 4) {
     throw new Error("rect array must have length == 4");
   }
   return { xMin: array[0], yMin: array[1], xMax: array[2], yMax: array[3] };
 }
 
-export function rectToArray(rect: Rect): number[] {
+export function rectToArray(rect: Rectangle): number[] {
   return [rect.xMin, rect.yMin, rect.xMax, rect.yMax];
 }
 
-export function isEmptyRect(rect: Rect): boolean {
+export function isEmptyRect(rect: Rectangle): boolean {
   const size = rectSize(rect);
   return size.width === 0 && size.height === 0;
 }
 
-export function rectFromPoints(points: { x: number; y: number }[]): Rect | undefined {
+export function rectFromPoints(
+  points: { x: number; y: number }[]
+): Rectangle | undefined {
   if (!points.length) {
     return undefined;
   }
@@ -176,7 +182,7 @@ export function rectFromPoints(points: { x: number; y: number }[]): Rect | undef
   return { xMin, yMin, xMax, yMax };
 }
 
-export function rectToPoints(rect: Rect): { x: number; y: number }[] {
+export function rectToPoints(rect: Rectangle): { x: number; y: number }[] {
   return [
     { x: rect.xMin, y: rect.yMin },
     { x: rect.xMax, y: rect.yMin },
@@ -185,7 +191,10 @@ export function rectToPoints(rect: Rect): { x: number; y: number }[] {
   ];
 }
 
-export function updateRect(rect: Rect, point: { x: number; y: number }): Rect {
+export function updateRect(
+  rect: Rectangle,
+  point: { x: number; y: number }
+): Rectangle {
   // Return the smallest rect that includes the original rect and the given point
   return {
     xMin: Math.min(rect.xMin, point.x),
@@ -195,7 +204,7 @@ export function updateRect(rect: Rect, point: { x: number; y: number }): Rect {
   };
 }
 
-export function rectAddMargin(rect: Rect, relativeMargin: number): Rect {
+export function rectAddMargin(rect: Rectangle, relativeMargin: number): Rectangle {
   const size = rectSize(rect);
   const inset =
     size.width > size.height
@@ -205,17 +214,17 @@ export function rectAddMargin(rect: Rect, relativeMargin: number): Rect {
 }
 
 export function rectScaleAroundCenter(
-  rect: Rect,
+  rect: Rectangle,
   scaleFactor: number,
   center: { x: number; y: number }
-): Rect {
+): Rectangle {
   rect = offsetRect(rect, -center.x, -center.y);
   rect = scaleRect(rect, scaleFactor);
   rect = offsetRect(rect, center.x, center.y);
   return rect;
 }
 
-export function rectRound(rect: Rect): Rect {
+export function rectRound(rect: Rectangle): Rectangle {
   return {
     xMin: Math.round(rect.xMin),
     yMin: Math.round(rect.yMin),
@@ -224,7 +233,7 @@ export function rectRound(rect: Rect): Rect {
   };
 }
 
-export function validateRect(rect: Rect): void {
+export function validateRect(rect: Rectangle): void {
   if (
     !isNumber(rect.xMin) ||
     !isNumber(rect.yMin) ||
