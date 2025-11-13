@@ -16,7 +16,7 @@ import {
   unionRect,
 } from "@fontra/core/rectangle.js";
 import { difference, isEqualSet, union, updateSet } from "@fontra/core/set-ops.js";
-import { decomposedToTransform } from "@fontra/core/transform.js";
+import { decomposedToTransform } from "@fontra/core/transform.ts";
 import {
   consolidateCalls,
   enumerate,

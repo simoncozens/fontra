@@ -12,14 +12,14 @@ import {
   offsetRect,
   pointInRect,
   rectSize,
-} from "@fontra/core/rectangle.js";
+} from "@fontra/core/rectangle.ts";
 import {
   difference,
   isSuperset,
   symmetricDifference,
   union,
 } from "@fontra/core/set-ops.js";
-import { Transform } from "@fontra/core/transform.js";
+import { Transform } from "@fontra/core/transform.ts";
 import {
   assert,
   boolInt,

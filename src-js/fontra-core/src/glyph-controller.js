@@ -16,7 +16,7 @@ import {
   rectToPoints,
   sectRect,
   unionRect,
-} from "./rectangle.js";
+} from "./rectangle.ts";
 import {
   getRepresentation,
   registerRepresentationFactory,
@@ -26,7 +26,7 @@ import {
   Transform,
   decomposedToTransform,
   prependTransformToDecomposed,
-} from "./transform.js";
+} from "./transform.ts";
 import {
   areGuidelinesCompatible,
   assert,

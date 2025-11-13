@@ -4,7 +4,7 @@ import {
   Transform,
   decomposedToTransform,
   prependTransformToDecomposed,
-} from "@fontra/core/transform.js";
+} from "@fontra/core/transform.ts";
 import {
   assert,
   enumerate,

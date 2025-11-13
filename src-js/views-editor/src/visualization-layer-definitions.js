@@ -2,7 +2,7 @@ import { guessGlyphPlaceholderString } from "@fontra/core/glyph-data.js";
 import { translate } from "@fontra/core/localization.js";
 import { rectToPoints } from "@fontra/core/rectangle.js";
 import { difference, isSuperset, union } from "@fontra/core/set-ops.js";
-import { decomposedToTransform } from "@fontra/core/transform.js";
+import { decomposedToTransform } from "@fontra/core/transform.ts";
 import {
   chain,
   clamp,
